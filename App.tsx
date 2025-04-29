@@ -1,13 +1,14 @@
-import { ScreenContent } from 'components/ScreenContent';
+import {View, Text} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-
+import HomeScreen from 'screens/HomeScreen';
 import './global.css';
 
-export default function App() {
+const App = (): JSX.Element => {
   return (
-    <>
-      <ScreenContent title="Home" path="App.tsx" />
-      <StatusBar style="auto" />
-    </>
+    <View className="flex-1">
+      <HomeScreen/>
+    </View>
   );
-}
+};
+
+export default App;
