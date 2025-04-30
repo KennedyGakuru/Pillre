@@ -1,13 +1,14 @@
-import {View, Text} from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import HomeScreen from 'screens/HomeScreen';
+
 import './global.css';
+import { NavigationContainer } from '@react-navigation/native';
+import BottomTabs from '~/navigation/BottomTabs';
+
 
 const App = (): JSX.Element => {
   return (
-    <View className="flex-1">
-      <HomeScreen/>
-    </View>
+      <NavigationContainer>
+      <BottomTabs/>
+      </NavigationContainer>
   );
 };
 
