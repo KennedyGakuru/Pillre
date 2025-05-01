@@ -15,12 +15,12 @@
     "plugins": [],
 
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/PillreIcon.png",
 
     "userInterfaceStyle": "light",
 
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Pillre.logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
