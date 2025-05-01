@@ -3,13 +3,9 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "~/screens/HomeScreen";
 import AddScreen from "~/screens/AddScreen";
 import ProfileScreen from "~/screens/ProfileScreen";
+import { BottomParamList } from "~/types/navigation";
 
 
-export type BottomParamList ={
-    Home: undefined;
-    Add: undefined;
-    Profile: undefined;
-};
 
 const Tab = createBottomTabNavigator<BottomParamList>();
 
