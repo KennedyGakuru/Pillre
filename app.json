@@ -17,13 +17,14 @@
     "orientation": "portrait",
     "icon": "./assets/PillreIcon.png",
 
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
 
     "splash": {
       "image": "./assets/Pillre.logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "resizeMode": "contain"
     },
+    
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
