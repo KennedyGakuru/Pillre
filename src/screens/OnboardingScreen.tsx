@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import {View, Text, Image, FlatList, TouchableOpacity, Dimensions, StatusBar, ListRenderItemInfo } from 'react-native';
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "~/types/navigation";
+import { useTheme } from "~/theme/colorScheme";
 
 interface Slide {
     id: string;
@@ -42,7 +43,7 @@ const handleNext = () => {
     if(currentIndex < slides.length -1) {
         flatListRef.current?.scrollToIndex({ index: currentIndex +1});
     } else {
-        navigation.navigate('Tabs');
+        navigation.navigate('Welcome');
     }
 };
 
@@ -54,16 +55,19 @@ const updateIndex = (e: any) => {
     const index= Math.round(e.nativeEvent.contentOffset.x/width);
     setCurrentIndex(index);
 };
+const {theme} = useTheme();
+
 
 
 const renderItem = ({item}: ListRenderItemInfo<Slide>) => (
     <View className="h-full items-center justify-center px-8">
-            <Text className="text-2xl  text-center mt-6 font-bold  max-w-[90%]">{item.title}</Text>
+            <Text className={` ${theme === 'dark' ? 'text-textDark' : 'text-text-Light'} 
+            text-2xl  text-center mt-6 font-bold  max-w-[90%]`}>{item.title}</Text>
             <Text className=" text-gray-600 text-center mt-3  max-w-[90%]">{item.description}</Text>
             <Image
             source={item.image}
             style={{
-                width: width * 0.8,
+                width: width * 0.85,
                 height: height * 0.4,
               }}
             resizeMode='contain'
@@ -85,10 +89,10 @@ const Dot = ({active}: {active : boolean}) => (
 );
 
 return(
-    <View className="flex-1 bg-white">
-        <StatusBar barStyle="dark-content"/>
+    <View className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
+        <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}/>
         <TouchableOpacity  onPress={handleSkip} className="absolute right-5 top-10">
-            <Text className="text-[#29B6F6]  font-bold text-[28px]">Skip</Text>
+            <Text className="text-primary  font-bold text-[26px]">Skip</Text>
         </TouchableOpacity>
     
 
@@ -112,7 +116,7 @@ return(
 
        <TouchableOpacity
          onPress={handleNext}
-         className="bg-[#29B6F6] mx-6 my-6 p-4 rounded-[10px]"
+         className="bg-primary mx-6 my-6 p-4 rounded-[10px]"
          >
             <Text style={{color: 'white', textAlign: 'center', fontWeight:'bold', fontSize: 20}}>
                 {currentIndex === slides.length -1 ? 'Get Started' : 'Next'}
