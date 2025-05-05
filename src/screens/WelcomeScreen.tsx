@@ -11,6 +11,7 @@ const WelcomeScreen: React.FC = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();;
 
     const handleLogin = () => navigation.navigate('Login')
+    const handleRegister = () => navigation.navigate('Register')
 
     return(
         <SafeAreaView edges={['top', 'left', 'right']}
@@ -36,7 +37,7 @@ const WelcomeScreen: React.FC = () => {
             className="w-full h-12 bg-primary items-center justify-center rounded-lg mb-4">
                 <Text className="text-[white]">Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleLogin}
+            <TouchableOpacity onPress={handleRegister}
             className="w-full h-12 bg-primary items-center justify-center rounded-lg">
                 <Text className="text-[white]">Register</Text>
             </TouchableOpacity>

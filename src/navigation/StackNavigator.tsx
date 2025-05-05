@@ -4,6 +4,13 @@ import LoginScreen from "~/screens/LoginScreen";
 import BottomTabs from "./BottomTabs";
 import { RootStackParamList } from "~/types/navigation";
 import WelcomeScreen from "~/screens/WelcomeScreen";
+import RegisterScreen from "~/screens/RegisterScreen";
+import ForgotPasswordScreen from "~/screens/ForgotPasswordScreen";
+import NewPasswordScreen from "~/screens/NewPasswordScreen";
+import SuccessScreen from "~/screens/SuccessScreen";
+
+
+
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -13,6 +20,10 @@ const StackNavigator = () => {
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+            <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+            <Stack.Screen name="Success" component={SuccessScreen} />
             <Stack.Screen name="Tabs" component={BottomTabs} />
         </Stack.Navigator>
     );

@@ -116,7 +116,7 @@ return(
 
        <TouchableOpacity
          onPress={handleNext}
-         className="bg-primary mx-6 my-6 p-4 rounded-[10px]"
+         className="bg-primary mx-6 my-6 p-4 rounded-[10px] pb-6"
          >
             <Text style={{color: 'white', textAlign: 'center', fontWeight:'bold', fontSize: 20}}>
                 {currentIndex === slides.length -1 ? 'Get Started' : 'Next'}
