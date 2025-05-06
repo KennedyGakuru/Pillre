@@ -21,18 +21,20 @@ const SuccessScreen : React.FC = () => {
     return(
         <SafeAreaView edges={['top','left','right']}
         className={`flex-1 p-10 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
-            <Image source={require('../../assets/checked.png.png')}
+            <View className="items-center">
+            <Image source={require('../../assets/checked.png')}
                  style={checkmarkStyle}
                  />
-            <Text className="text-primary font-bold text-4xl">
+                 </View>
+            <Text className="text-primary font-bold text-4xl self-center mt-20">
             Password Changed!
             </Text>     
-            <Text className="text-primary text-gray-600 text-xl">
+            <Text className="text-primary text-gray-600 text-xl self-center">
             Your password has been changed successfully.
             </Text>     
             <TouchableOpacity onPress={handleLogin}
-            className="w-full h-12 bg-primary items-center justify-center rounded-lg mt-10">
-                <Text className="text-[white]">Register</Text>
+            className="w-full h-12 bg-primary items-center justify-center rounded-lg mt-20">
+                <Text className="text-[white]">Back to Login</Text>
             </TouchableOpacity>     
         </SafeAreaView>
     )
