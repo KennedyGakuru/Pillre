@@ -28,7 +28,7 @@ const ForgotPasswordScreen : React.FC = () => {
         const isEmailValid = validateEmail(email);
 
         if (isEmailValid){
-            
+          navigation.navigate('Verification')  
         }
     };
 
