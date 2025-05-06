@@ -16,7 +16,7 @@ const LoginScreen: React.FC = () => {
     const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
     const handleBack = (): void => navigation.goBack();
-    const handleRegister = (): void => navigation.navigate('Register'); 
+    const handleRegister = (): void => navigation.navigate('Register');  
     const handleForgotPassword = (): void => navigation.navigate('ForgotPassword'); 
     const toggleSceurity = (): void => setSecureTextEntry(!secureTextEntry);
     const googleLogoStyle : ImageStyle = {
@@ -40,7 +40,8 @@ const LoginScreen: React.FC = () => {
             </View>    
             <View className="mt-10 items-center">
                 <TextInput
-                 className='border border-gray-300 h-12 w-full rounded-lg p-5'
+                 className='border border-gray-300 h-12 w-full rounded-lg px-4 text-base'
+                 style={{ color: theme === 'dark' ? '#F3F4F6' : '#1F2937' }}
                  placeholder='Enter your Email'
                  placeholderTextColor='#999'
                  value={email}
@@ -52,7 +53,8 @@ const LoginScreen: React.FC = () => {
             <View className="mt-10 items-center">
                 <View className=" border border-gray-300 h-12 w-full flex-row items-center rounded-lg">
                 <TextInput
-                 className="flex-1 p-5"
+                 className="flex-1 px-4 text-base"
+                 style={{ color: theme === 'dark' ? '#F3F4F6' : '#1F2937' }}
                  placeholder='Enter your Password'
                  placeholderTextColor='#999'
                  value={password}
