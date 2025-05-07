@@ -6,8 +6,7 @@ import { RootStackParamList } from '~/types/navigation';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
-import  DateTimePicker  from '@react-native-community/datetimepicker';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 const AddScreen: React.FC = () => {
@@ -19,28 +18,17 @@ const AddScreen: React.FC = () => {
     const [amount, setAmount] = useState<string>('');
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
-    const [dateTime, setDateTime] = useState(new Date());
-    const [mode, setMode] = useState<'date' |'time'>('date');
+    const [time, setTime] = useState(new Date());
     const [show, setShow] = useState(false);
 
-    const formatDateTime = (date: Date)  => {
-        const dd =  String(date.getDate()).padStart(2,'0');
-        const mm = String(date.getMonth()+2).padStart(2, '0');
-        const hh = String(date.getHours()).padStart(2,'0');
-        const min = String(date.getMinutes()).padStart(2,'0');
-        return `${dd}/${mm}, ${hh}${min}`;
-    };
 
-    const showMode = (currentMode: 'date' | 'time') => {
-        setMode(currentMode)
-        setShow(true)
-    };
+
 
     const onChange = (event: any, selectedDate?: Date) => {
-        if(selectedDate) {
-            setDateTime(selectedDate)
+        if (selectedDate) {
+            setTime(selectedDate);
         }
-        setShow(false)
+        setShow(Platform.OS === 'ios');
     };
 
     const [items, setItems] = useState([
@@ -143,7 +131,19 @@ const AddScreen: React.FC = () => {
                 >Reminders</Text>
                 <Text style={{ color: theme === 'dark' ? '#F3F4F6' : '#1F2937' }}
                 >Date</Text>
-                
+                <View>
+                <Button title="Select Time" onPress={()=> setShow(true)} />
+
+                    { show && (
+                        <DateTimePicker
+                         value={time}
+                         mode='time'
+                         is24Hour={true}
+                         display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                         onChange={onChange}
+                         />
+                    )}
+                    </View>
             </View>
             <View className="items-center">
             <TouchableOpacity 
