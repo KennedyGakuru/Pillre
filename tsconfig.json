@@ -1,8 +1,7 @@
 {
-  "extends": "./node_modules/expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "jsx": "react-native", // use react-native for React Native projects
+    "jsx": "react-native",
     "baseUrl": ".",
     "paths": {
       "~/*": [
@@ -24,5 +23,6 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }
