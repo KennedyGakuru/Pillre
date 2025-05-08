@@ -44,7 +44,7 @@ const BottomTabs = ()  => {
         })}
        >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Add" component={AddScreen} />
+        <Tab.Screen name="Add" component={AddScreen} options={{ tabBarStyle: {display: 'none'}}}/>
         <Tab.Screen name="Profile" component={ProfileScreen} />
        </Tab.Navigator> 
     );
