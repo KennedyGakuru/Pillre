@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const AddScreen: React.FC = () => {
@@ -19,17 +20,11 @@ const AddScreen: React.FC = () => {
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
     const [time, setTime] = useState(new Date());
-    const [show, setShow] = useState(false);
+    const [date, setDate] = useState(new Date());
+    const [showTimePicker, setShowTimePicker] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
 
-
-
-    const onChange = (event: any, selectedDate?: Date) => {
-        if (selectedDate) {
-            setTime(selectedDate);
-        }
-        setShow(Platform.OS === 'ios');
-    };
 
     const [items, setItems] = useState([
         { label: 'Capsule', value: 'capsule' },
@@ -40,6 +35,31 @@ const AddScreen: React.FC = () => {
 
 
     const handleBack = (): void => navigation.goBack();
+    const handleSave = async () => {
+        const medicineData ={
+            id: Date.now(),
+            name,
+            dose,
+            amount,
+            type: selectedValue,
+            data: date.toISOString(),
+            time: time.toISOString(),
+        };
+        try{
+            const storedData = await AsyncStorage.getItem('medicines');
+            const existing = storedData ? JSON.parse(storedData) : [];
+
+            const updated = [...existing, medicineData];
+
+            await AsyncStorage.setItem('medicines', JSON.stringify(updated));
+
+            console.log('Saved Successfully');
+            // navigation.navigate('Tabs', { screen: 'Home' })
+
+        } catch (error) {
+            console.error('Save error:',error);
+        }
+    };
 
     return(
         <SafeAreaView edges={['top', 'left','right']}
@@ -131,22 +151,40 @@ const AddScreen: React.FC = () => {
                 >Reminders</Text>
                 <Text style={{ color: theme === 'dark' ? '#F3F4F6' : '#1F2937' }}
                 >Date</Text>
-                <View>
-                <Button title="Select Time" onPress={()=> setShow(true)} />
-
-                    { show && (
-                        <DateTimePicker
-                         value={time}
-                         mode='time'
-                         is24Hour={true}
-                         display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                         onChange={onChange}
-                         />
-                    )}
-                    </View>
+                
+                <View className='flex-row justify-between'>
+                <TouchableOpacity className="w-12 h-6 bg-primary items-center justify-center rounded-lg mt-10"
+                onPress={() => setShowDatePicker(true)}> <Text className='text-white'> Date</Text></TouchableOpacity>
+              {showDatePicker && (
+              <DateTimePicker
+              value={date}
+              mode="date"
+             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+             onChange={(event, selectedDate) => {
+             setShowDatePicker(false);
+             if (selectedDate) setDate(selectedDate);
+             }}
+             />
+            )}
+           <TouchableOpacity className="w-12 h-6 bg-primary items-center justify-center rounded-lg mt-10"
+            onPress={() => setShowTimePicker(true)}> <Text className="text-white"> Time</Text></TouchableOpacity>
+            {showTimePicker && (
+             <DateTimePicker
+             value={time}
+             mode="time"
+             is24Hour={true}
+             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+             onChange={(event, selectedTime) => {
+             setShowTimePicker(false);
+             if (selectedTime) setTime(selectedTime);
+             }}
+             />
+             )}
+             </View>
             </View>
+             <Text className="text-lg">{date.toDateString()}: {time.toLocaleTimeString()}</Text>
             <View className="items-center">
-            <TouchableOpacity 
+            <TouchableOpacity onPress={handleSave}
             className="w-36 h-12 bg-primary items-center justify-center rounded-lg mt-10">
                 <Text className="text-[white]">Save</Text>
             </TouchableOpacity>
