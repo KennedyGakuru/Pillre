@@ -1,17 +1,17 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import { useTheme } from '~/theme/colorScheme';
-import { useNavigation, NavigationProp  } from '@react-navigation/native';
-import { RootStackParamList } from '~/types/navigation';
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTheme } from 'theme/colorScheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import {  useRouter } from 'expo-router';
 
 
 
 const WelcomeScreen: React.FC = () => {
     const {theme} = useTheme();
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();;
+    const router = useRouter();
+    
 
-    const handleLogin = () => navigation.navigate('Login')
-    const handleRegister = () => navigation.navigate('Register')
+    const handleLogin = () => router.replace('/login');
+    const handleRegister = () => router.replace('/register');
 
     return(
         <SafeAreaView edges={['top', 'left', 'right']}

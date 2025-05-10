@@ -1,23 +1,41 @@
-import {View, Text, TouchableOpacity, TextInput, Image, StatusBar, ImageStyle} from 'react-native';
+import {View, Text, TouchableOpacity, TextInput, Image, StatusBar, ImageStyle,
+     Alert, ActivityIndicator, KeyboardAvoidingView, Platform,
+     ScrollView} from 'react-native';
+import { router } from 'expo-router';
+import { useAuth } from 'context/AuthContext';   
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '~/theme/colorScheme';
+import { useTheme } from 'theme/colorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '~/types/navigation';
 import {useState } from 'react';
 
 
 
 const LoginScreen: React.FC = () => {
     const {theme}= useTheme();
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
+    const { signIn } = useAuth();
 
-    const handleBack = (): void => navigation.goBack();
-    const handleRegister = (): void => navigation.navigate('Register');  
-    const handleForgotPassword = (): void => navigation.navigate('ForgotPassword'); 
+    const handleLogin = async () => {
+        if(!email || !password) {
+            Alert.alert('Error', 'Please fill in all fields');
+           return;
+        }
+    
+
+    setIsSubmitting (true);
+    try{
+        await signIn(email, password);
+        router.replace('/(tabs)');
+    } catch (error) {
+        Alert.alert('Login Failed', 'Please check your credentials and try again!')
+    } finally {
+        setIsSubmitting(false)
+    }
+}
+
     const toggleSceurity = (): void => setSecureTextEntry(!secureTextEntry);
     const googleLogoStyle : ImageStyle = {
         height: 35,
@@ -28,7 +46,11 @@ const LoginScreen: React.FC = () => {
         <SafeAreaView edges={['top', 'left','right']}
         className={`flex-1 p-10 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
              <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}/>
-            <TouchableOpacity onPress={handleBack} 
+             <KeyboardAvoidingView
+                   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                   className='flex-1 '
+                 >
+            <TouchableOpacity  
             style={{backgroundColor:'#F5F5F5', height:40, width:40, borderRadius:10, alignItems:'center', justifyContent:'center'}}>
             <Ionicons name='arrow-back' size={25} color='black' 
             />
@@ -71,15 +93,23 @@ const LoginScreen: React.FC = () => {
                   </View>
             </View>
             
-            <TouchableOpacity onPress={handleForgotPassword} 
+            <TouchableOpacity  onPress={() => router.push('/forgot')}
             className="self-end mb-4">
             <Text className="text-primary ">Forgot password?</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
-            className="w-full h-12 bg-primary items-center justify-center rounded-lg mt-10">
+            onPress={handleLogin}
+            disabled={isSubmitting}
+            className={`w-full h-12 bg-primary items-center justify-center rounded-lg mt-10 ${isSubmitting ? 'opcatiy-50': ''}`}>
+                {isSubmitting ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                ) : (
                 <Text className="text-[white]">Login</Text>
+                )}
             </TouchableOpacity>
+
+
             <View className="flex-row items-center my-6">
                 <View className="flex-1 h-px bg-gray-300"/>
                     <Text className="px-4 text-gray-400">or</Text>
@@ -93,16 +123,17 @@ const LoginScreen: React.FC = () => {
                  />
                 <Text style={{color: theme === 'dark' ? '#F3F4F6' : '#1F2937'}}>Continue with Google</Text>
             </TouchableOpacity>
-
-
+                       
             <View className='items-center justify-end flex-1 pb-6'>
             <View className="flex-row ">
                 <Text className="text-gray-600">Don't Have an Account?</Text>
-                <TouchableOpacity onPress={handleRegister}>
+                <TouchableOpacity onPress={() => router.push('/register')}>
                     <Text className="text-primary ">Register</Text>
                 </TouchableOpacity>
             </View>
             </View>
+           
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }

@@ -1,20 +1,18 @@
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
-import { useTheme } from '~/theme/colorScheme';
-import { RootStackParamList } from '~/types/navigation';
-import { NavigationProp, useNavigation} from '@react-navigation/native';
+import { useTheme } from 'theme/colorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import {  useRouter } from 'expo-router';
 
 const ForgotPasswordScreen : React.FC = () => {
     const {theme} = useTheme();
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const router = useRouter();
     const [email, setEmail] = useState<string>('');
     const [emailError, setEmailError] =useState<string | null>(null);
 
-    const handleBack = (): void => navigation.goBack();
-    const handleLogin = (): void => navigation.navigate('Login');
-
+    const handleBack = (): void => router.back();
+    const handleLogin = (): void => router.replace('/login');
     const validateEmail = (email:string) => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
             setEmailError('Please enter a valid email');
@@ -28,7 +26,7 @@ const ForgotPasswordScreen : React.FC = () => {
         const isEmailValid = validateEmail(email);
 
         if (isEmailValid){
-          navigation.navigate('Verification')  
+          router.replace('/verify');
         }
     };
 

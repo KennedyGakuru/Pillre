@@ -2,6 +2,7 @@
   "expo": {
     "name": "pillre",
     "slug": "pillre",
+    "scheme": "pillre",
     "version": "1.0.0",
 
     "web": {

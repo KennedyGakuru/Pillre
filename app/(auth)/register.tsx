@@ -1,24 +1,26 @@
-import {Text,View, TouchableOpacity, TextInput, ImageStyle, Image} from 'react-native';
-import { useTheme } from '~/theme/colorScheme';
+import {Text,View, TouchableOpacity, TextInput, ImageStyle, Image, 
+    Platform, Alert, KeyboardAvoidingView, ActivityIndicator,
+    ScrollView} from 'react-native';
+import { useTheme } from 'theme/colorScheme';
 import { useState } from 'react';
-import { RootStackParamList } from '~/types/navigation';
-import { NavigationProp,useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useAuth } from 'context/AuthContext';
+import { router } from 'expo-router';
 
 const RegisterScreen : React.FC = () => {
     const {theme} = useTheme();
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const { signUp } = useAuth();
     const [email, setEmail] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [emailError, setEmailError] = useState<string | null>(null);
     const [password, setPassword] = useState<string>('');
     const [confirmpassword, setConfirmPassword] = useState<string>('');
     const [passwordError,setPasswordError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [secureTextEntry,setSecureTextEntry] =useState<boolean>(true);
 
-    const handleBack = (): void => navigation.goBack();
+    const handleBack = (): void => router.back();
     
     const toggleSecurity = (): void => setSecureTextEntry(!secureTextEntry);
     const validateEmail = (email:string) => {
@@ -37,32 +39,55 @@ const RegisterScreen : React.FC = () => {
         setPasswordError(null)
         return true;
     };
-    const handleRegistration = () => {
-        const isEmailValid = validateEmail(email);
-        const isPasswordValid = password === confirmpassword;
+    
+    const handleRegister = async () => {
+  if (!userName|| !email || !password || !confirmpassword) {
+    Alert.alert('Error', 'Please fill in all fields');
+    return;
+  }
 
-        if (isEmailValid && isPasswordValid) {
-            navigation.navigate('Login')
-        }
-    }
+  if (password.length < 6) {
+    setPasswordError('Password must be at least 6 characters');
+    return;
+  }
+
+  setIsSubmitting(true);
+  try {
+    await signUp(userName, email, password);
+    router.replace('/(tabs)');
+  } catch (error) {
+    Alert.alert(
+      'Registration Failed',
+      (error instanceof Error ? error.message : 'Please try again with different credentials.')
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+    
+
 
     const googleLogoStyle : ImageStyle = {
         height: 35,
         width: 35
     };
-    const handleLogin = (): void => navigation.navigate('Login');
+    const handleLogin = (): void => router.replace('/login');
 
     return(
         <SafeAreaView edges={['top','left','right']}
         className={`flex-1 p-10 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
-        
+        <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              className='flex-1'
+              >
+                 
             <TouchableOpacity onPress={handleBack} 
             style={{backgroundColor:'#F5F5F5', height:40, width:40, borderRadius:10, alignItems:'center', justifyContent:'center'}}>
             <Ionicons name='arrow-back' size={25} color='black' 
             />
             </TouchableOpacity>
 
-            <View className='mt-20 items-center'>
+            <View className='mt-10 items-center'>
                 <Text className="text-primary text-3xl font-bold text-center">
                     Hello! Register{'\n'}to get started!
                 </Text>
@@ -138,9 +163,15 @@ const RegisterScreen : React.FC = () => {
                   {passwordError && <Text style={{ color: '#EF4444', fontSize: 12, marginTop: 4, alignSelf:'flex-start' }}>{passwordError}</Text>}
             </View>
 
-            <TouchableOpacity onPress={handleRegistration}
-            className="w-full h-12 bg-primary items-center justify-center rounded-lg mt-10">
+            <TouchableOpacity 
+            onPress={handleRegister}
+            disabled={isSubmitting}
+            className={`w-full h-12 bg-primary items-center justify-center rounded-lg mt-10 ${isSubmitting ? 'opcatiy-50': ''}`}>
+                {isSubmitting ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                ) : (
                 <Text className="text-[white]">Register</Text>
+                )}
             </TouchableOpacity>
             <View className="flex-row items-center my-6">
                 <View className="flex-1 h-px bg-gray-300"/>
@@ -161,11 +192,12 @@ const RegisterScreen : React.FC = () => {
             <View className="flex-row ">
                 <Text className="text-gray-600">Already have an account?</Text>
                 <TouchableOpacity onPress={handleLogin}>
-                    <Text className="text-primary ">Login</Text>
+                    <Text className="text-primary "> Login</Text>
                 </TouchableOpacity>
             </View>
             </View>
-
+            
+            </KeyboardAvoidingView>
         </SafeAreaView>
     ) 
 };

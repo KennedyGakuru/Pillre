@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import {View, Text, Image, FlatList, TouchableOpacity, Dimensions, StatusBar, ListRenderItemInfo } from 'react-native';
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "~/types/navigation";
-import { useTheme } from "~/theme/colorScheme";
+import { useRouter } from "expo-router";
+import { useTheme } from "theme/colorScheme";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Slide {
     id: string;
@@ -18,37 +18,38 @@ const slides: Slide[] =[
         id: '1',
         title: 'Stay Healthy, \n Stay On Track',
         description: 'Pillre helps you remember your \n daily medicine easily and safely.',
-        image: require('../../assets/Onboard1.png'),
+        image: require('../assets/Onboard1.png'),
     },
     {
         id: '2',
         title: 'Never Miss \n a Dose Again',
         description: 'Get gentle reminders and easily log \n when you take your medicine.',
-        image: require('../../assets/Onboard2.png'),
+        image: require('../assets/Onboard2.png'),
     },
     {
         id: '3',
         title: 'Built Just for You',
         description: 'Customize your schedule, track your\n progress, and stay in control of your health.',
-        image: require('../../assets/Onboard3.png'),
+        image: require('../assets/Onboard3.png'),
     },
 ];
 
 const OnboardingScreen = () => {
     const [currentIndex, setCurrentIndex] = useState<number>(0);
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const router = useRouter();
     const flatListRef = useRef<FlatList<Slide>>(null);
 
-const handleNext = () => {
-    if(currentIndex < slides.length -1) {
-        flatListRef.current?.scrollToIndex({ index: currentIndex +1});
-    } else {
-        navigation.navigate('Welcome');
-    }
+const handleNext = async () => {
+  if (currentIndex < slides.length - 1) {
+    flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
+  } else {
+    await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+    router.replace('/welcome'); // or any other screen you want
+  }
 };
 
 const handleSkip = () => {
-    navigation.navigate('Login');
+    router.replace('/welcome');
 };
 
 const updateIndex = (e: any) => {

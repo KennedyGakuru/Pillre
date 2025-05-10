@@ -1,18 +1,17 @@
 import {Text,TouchableOpacity,View, TextInput} from 'react-native';
-import { useTheme } from '~/theme/colorScheme';
+import { useTheme } from 'theme/colorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NavigationProp,useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '~/types/navigation';
 import { useState,useRef } from 'react';
+import {  useRouter } from 'expo-router';
 
 const VerifictionScreen : React.FC = () => {
     const {theme} = useTheme();
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const router = useRouter();
     const [code, setCode] = useState(["","","",""]);
     const inputs = useRef<Array<TextInput | null>>([]);
 
-    const handleBack = (): void => navigation.goBack();
+    const handleBack = (): void => router.back();
 
     const handleChange = (text:string, index:number) => {
         if (/^\d$/.test(text)) {
@@ -72,7 +71,7 @@ const VerifictionScreen : React.FC = () => {
                  ))}
 
                 </View>
-            <TouchableOpacity 
+            <TouchableOpacity onPress={() => router.push('/success')}
                 className="w-full h-12 bg-primary items-center justify-center rounded-lg mt-10">
                 <Text className="text-[white]">Verify</Text>
             </TouchableOpacity> 
