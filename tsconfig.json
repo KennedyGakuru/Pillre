@@ -8,7 +8,8 @@
         "src/*"
       ]
     },
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
+    "module": "Node16",
     "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -24,5 +25,5 @@
   "exclude": [
     "node_modules"
   ],
-  // Ensure the file exists or remove this line if not needed
+  "extends": "expo/tsconfig.base"
 }
