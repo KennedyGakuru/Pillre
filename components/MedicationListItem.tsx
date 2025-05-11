@@ -1,6 +1,7 @@
 import React = require('react');
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Pillicon from './Pillicon';
 
 interface Medication {
   id: string;
@@ -21,7 +22,7 @@ export default function MedicationListItem({ medication, onPress }: MedicationLi
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.iconContainer}>
-        <Ionicons name="medkit" size={24} color="#3B82F6" />
+        <Pillicon width={30} height={24}  />
       </View>
       
       <View style={styles.contentContainer}>
