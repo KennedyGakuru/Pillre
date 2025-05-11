@@ -20,7 +20,7 @@ export default function MedicationsScreen() {
         <Text style={styles.title}>Medications</Text>
         <TouchableOpacity 
           style={styles.addButton}
-          onPress={() => router.push('/')}
+          onPress={() => router.push('/(medications)/add')}
         >
           <Ionicons name="add-circle" size={24} color="#FFFFFF" />
         </TouchableOpacity>
@@ -63,7 +63,7 @@ export default function MedicationsScreen() {
       {!searchQuery && (
         <TouchableOpacity 
           style={styles.emptyButton}
-          onPress={() => router.push('/')}
+          onPress={() => router.push('/medications/add')}
         >
           <Text style={styles.emptyButtonText}>Add Medication</Text>
         </TouchableOpacity>
@@ -79,7 +79,7 @@ export default function MedicationsScreen() {
         renderItem={({ item }) => (
           <MedicationListItem 
             medication={item}
-            onPress={() => router.push(`/`)}
+            onPress={() => router.push(`/medications/add`)}
           />
         )}
         ListHeaderComponent={renderHeader}

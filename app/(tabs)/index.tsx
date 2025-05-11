@@ -60,7 +60,7 @@ export default function HomeScreen() {
             
             <TouchableOpacity 
               style={styles.addButtonContainer}
-              onPress={() => router.push('/')}
+              onPress={() => router.push('/(medications)/add')}
             >
               <View style={styles.addButton}>
                 <Ionicons name="add" size={24} color="#3B82F6" />

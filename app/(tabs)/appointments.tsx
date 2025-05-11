@@ -21,7 +21,7 @@ export default function AppointmentsScreen() {
         <Text style={styles.title}>Appointments</Text>
         <TouchableOpacity 
           style={styles.addButton}
-          onPress={() => router.push('/')}
+          onPress={() => router.push('/appointments/book')}
         >
           <Ionicons name="add-circle" size={24} color="#FFFFFF" />
         </TouchableOpacity>
@@ -64,7 +64,7 @@ export default function AppointmentsScreen() {
       {!searchQuery && (
         <TouchableOpacity 
           style={styles.emptyButton}
-          onPress={() => router.push('/')}
+          onPress={() => router.push('/appointments/book')}
         >
           <Text style={styles.emptyButtonText}>Book Appointment</Text>
         </TouchableOpacity>

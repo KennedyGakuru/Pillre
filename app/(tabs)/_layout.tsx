@@ -43,8 +43,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => (
+          title: '',
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
         }}
@@ -52,8 +52,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="medications"
         options={{
-          title: 'Medications',
-          tabBarIcon: ({ color, size }) => (
+          title: '',
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <Ionicons name="medkit" size={size} color={color} />
           ),
         }}
@@ -61,8 +61,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="appointments"
         options={{
-          title: 'Appointments',
-          tabBarIcon: ({ color, size }) => (
+          title: '',
+          tabBarIcon: ({ color, size }: { color: string; size: number })  => (
             <Ionicons name='time' size={size} color={color} />
           ),
         }}
@@ -70,8 +70,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="calendar"
         options={{
-          title: 'Calendar',
-          tabBarIcon: ({ color, size }) => (
+          title: '',
+          tabBarIcon: ({ color, size } : { color: string; size: number }) => (
             <Ionicons name="calendar" size={size} color={color}/>
           ),
         }}
@@ -79,9 +79,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle" size={size} color={color} />
+          title: '',
+          tabBarIcon: ({ color, size } : { color: string; size: number }) => (
+            <Ionicons name="person" size={size} color={color} />
           ),
         }}
       />
