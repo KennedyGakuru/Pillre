@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useAuth, User as BaseUser } from 'context/AuthContext';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -11,29 +11,28 @@ interface User extends BaseUser {
   city?: string;
   state?: string;
   zipCode?: string;
-  dateOfBirth?: string | Date; // Ensure compatibility with both string and Date
+  dateOfBirth?: string | Date;
   gender?: string;
   alternateEmail?: string;
   alternatePhone?: string;
 }
 
-
-const personalinfo: React.FC = () => {
+const PersonalInfo: React.FC = () => {
   const { user, updateUserProfile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   
   const [formData, setFormData] = useState({
-    address:  '',
-    city:  '',
+    address: '',
+    city: '',
     state: '',
     zipCode: '',
     dateOfBirth: (user as User)?.dateOfBirth ? new Date(String((user as User).dateOfBirth)) : new Date(),
     gender: '',
-    alternateEmail:  '',
-    alternatePhone:  '',
+    alternateEmail: '',
+    alternatePhone: '',
   });
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
@@ -44,38 +43,46 @@ const personalinfo: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-      setError(null);
-      setIsSubmitting(true);
-  
-      try {
-        const updatedProfile: Partial<User> = {
-          ...formData,
-          dateOfBirth: formData.dateOfBirth instanceof Date ? formData.dateOfBirth.toISOString() : formData.dateOfBirth,
-        };
-        await updateUserProfile(updatedProfile);
-        router.back();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to update information');
-      } finally {
-        setIsSubmitting(false);
-      }
-    };
-    return(
-        <ScrollView style={styles.container}>
-      <View style={styles.content}>
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      const updatedProfile: Partial<User> = {
+        ...formData,
+        dateOfBirth: formData.dateOfBirth instanceof Date ? formData.dateOfBirth.toISOString() : formData.dateOfBirth,
+      };
+      await updateUserProfile(updatedProfile);
+      router.back();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update information');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
+      <View className="p-6">
         {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+          <View className="bg-red-100 dark:bg-red-900/30 p-4 rounded-lg mb-6">
+            <Text className="font-inter-medium text-sm text-red-500 dark:text-red-300">
+              {error}
+            </Text>
           </View>
         )}
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Address Information</Text>
+        {/* Address Information Section */}
+        <View className="mb-8">
+          <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-4">
+            Address Information
+          </Text>
           
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Street Address</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Street Address
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.address}
               onChangeText={(text) => setFormData(prev => ({ ...prev, address: text }))}
               placeholder="Enter your street address"
@@ -83,10 +90,12 @@ const personalinfo: React.FC = () => {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>City</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              City
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.city}
               onChangeText={(text) => setFormData(prev => ({ ...prev, city: text }))}
               placeholder="Enter your city"
@@ -94,11 +103,13 @@ const personalinfo: React.FC = () => {
             />
           </View>
 
-          <View style={styles.row}>
-            <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
-              <Text style={styles.label}>State</Text>
+          <View className="flex-row mb-4">
+            <View className="flex-1 mr-2">
+              <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+                State
+              </Text>
               <TextInput
-                style={styles.input}
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
                 value={formData.state}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, state: text }))}
                 placeholder="State"
@@ -106,10 +117,12 @@ const personalinfo: React.FC = () => {
               />
             </View>
 
-            <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
-              <Text style={styles.label}>ZIP Code</Text>
+            <View className="flex-1 ml-2">
+              <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+                ZIP Code
+              </Text>
               <TextInput
-                style={styles.input}
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
                 value={formData.zipCode}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, zipCode: text }))}
                 placeholder="ZIP"
@@ -120,16 +133,21 @@ const personalinfo: React.FC = () => {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Personal Details</Text>
+        {/* Personal Details Section */}
+        <View className="mb-8">
+          <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-4">
+            Personal Details
+          </Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Date of Birth</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Date of Birth
+            </Text>
             <TouchableOpacity
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3"
               onPress={() => setShowDatePicker(true)}
             >
-              <Text style={styles.dateText}>
+              <Text className="font-inter-regular text-base text-gray-800 dark:text-gray-100">
                 {format(formData.dateOfBirth, 'MMMM d, yyyy')}
               </Text>
             </TouchableOpacity>
@@ -143,10 +161,12 @@ const personalinfo: React.FC = () => {
             )}
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Gender</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Gender
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.gender}
               onChangeText={(text) => setFormData(prev => ({ ...prev, gender: text }))}
               placeholder="Enter your gender"
@@ -155,13 +175,18 @@ const personalinfo: React.FC = () => {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Additional Contact</Text>
+        {/* Additional Contact Section */}
+        <View className="mb-8">
+          <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-4">
+            Additional Contact
+          </Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Alternative Email</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Alternative Email
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.alternateEmail}
               onChangeText={(text) => setFormData(prev => ({ ...prev, alternateEmail: text }))}
               placeholder="Enter alternative email"
@@ -171,10 +196,12 @@ const personalinfo: React.FC = () => {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Alternative Phone</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Alternative Phone
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.alternatePhone}
               onChangeText={(text) => setFormData(prev => ({ ...prev, alternatePhone: text }))}
               placeholder="Enter alternative phone"
@@ -184,21 +211,26 @@ const personalinfo: React.FC = () => {
           </View>
         </View>
 
-        <View style={styles.buttonContainer}>
+        {/* Buttons */}
+        <View className="flex-row gap-3 mt-6">
           <TouchableOpacity
-            style={[styles.button, styles.cancelButton]}
+            className="flex-1 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg justify-center items-center"
             onPress={() => router.back()}
             disabled={isSubmitting}
           >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
+            <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300">
+              Cancel
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.saveButton, isSubmitting && styles.buttonDisabled]}
+            className={`flex-1 h-12 bg-blue-500 rounded-lg justify-center items-center ${
+              isSubmitting ? 'opacity-70' : ''
+            }`}
             onPress={handleSubmit}
             disabled={isSubmitting}
           >
-            <Text style={styles.saveButtonText}>
+            <Text className="font-inter-semibold text-base text-white">
               {isSubmitting ? 'Saving...' : 'Save Changes'}
             </Text>
           </TouchableOpacity>
@@ -206,98 +238,6 @@ const personalinfo: React.FC = () => {
       </View>
     </ScrollView>
   );
-}
-    
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  section: {
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginBottom: 16,
-  },
-  errorContainer: {
-    backgroundColor: '#FEE2E2',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  errorText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#EF4444',
-  },
-  inputGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#4B5563',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  row: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  dateText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 24,
-  },
-  button: {
-    flex: 1,
-    height: 48,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#F3F4F6',
-  },
-  saveButton: {
-    backgroundColor: '#3B82F6',
-  },
-  buttonDisabled: {
-    backgroundColor: '#93C5FD',
-  },
-  cancelButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#4B5563',
-  },
-  saveButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-});
+};
 
-export default personalinfo;
-
-
-
+export default PersonalInfo;

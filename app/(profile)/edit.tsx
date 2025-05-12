@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, Platform } from 'react-native';
 import { useAuth } from 'context/AuthContext';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
@@ -7,24 +7,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'theme/colorScheme';
 
-const edit: React.FC = () => {
-    const { user, updateUserProfile } = useAuth();
+const EditProfile: React.FC = () => {
+  const { user, updateUserProfile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   
-  const [formData, setFormData] = useState<{
-    name: string;
-    email: string;
-    phone: string;
-    bio: string;
-    profileImage: string | null;
-  }>({
+  const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
     phone: user?.phoneNumber || '',
     bio: '',
-    profileImage: null,
+    profileImage: null as string | null,
   });
 
   const pickImage = async () => {
@@ -65,50 +59,62 @@ const edit: React.FC = () => {
     }
   };
 
-    return(
-      <ScrollView style={styles.container}>
-      <SafeAreaView style={styles.content}>
-        <View style={styles.imageSection}>
-          <View style={styles.imageContainer}>
+  return (
+    <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
+      <SafeAreaView className="p-6">
+        {/* Profile Image Section */}
+        <View className="items-center mb-8">
+          <View className="w-30 h-30 rounded-full mb-4 relative">
             {formData.profileImage ? (
               <>
                 <Image
                   source={{ uri: formData.profileImage }}
-                  style={styles.profileImage}
+                  className="w-full h-full rounded-full"
                 />
                 <TouchableOpacity
-                  style={styles.removeImageButton}
+                  className="absolute top-0 right-0 bg-red-500 rounded-full p-2"
                   onPress={() => setFormData(prev => ({ ...prev, profileImage: null }))}
                 >
                   <Ionicons name="close" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
               </>
             ) : (
-              <View style={styles.placeholderImage}>
-                <Text style={styles.placeholderText}>
+              <View className="w-full h-full rounded-full bg-blue-100 dark:bg-blue-900/30 justify-center items-center">
+                <Text className="font-inter-semibold text-5xl text-blue-500">
                   {formData.name.charAt(0).toUpperCase()}
                 </Text>
               </View>
             )}
           </View>
           
-          <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-            <Ionicons name="camera" size={20} color="#3B82F6" style={styles.uploadIcon} />
-            <Text style={styles.uploadText}>Change Photo</Text>
+          <TouchableOpacity 
+            className="flex-row items-center bg-blue-100 dark:bg-blue-900/30 py-2 px-4 rounded-lg"
+            onPress={pickImage}
+          >
+            <Ionicons name="camera" size={20} color="#3B82F6" className="mr-2" />
+            <Text className="font-inter-medium text-sm text-blue-500 dark:text-blue-300">
+              Change Photo
+            </Text>
           </TouchableOpacity>
         </View>
 
+        {/* Error Message */}
         {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+          <View className="bg-red-100 dark:bg-red-900/30 p-4 rounded-lg mb-6">
+            <Text className="font-inter-medium text-sm text-red-500 dark:text-red-300">
+              {error}
+            </Text>
           </View>
         )}
 
-        <View style={styles.formSection}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Name</Text>
+        {/* Form Section */}
+        <View className="mb-6">
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Name
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.name}
               onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
               placeholder="Enter your name"
@@ -116,10 +122,12 @@ const edit: React.FC = () => {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Email
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.email}
               onChangeText={(text) => setFormData(prev => ({ ...prev, email: text }))}
               placeholder="Enter your email"
@@ -129,10 +137,12 @@ const edit: React.FC = () => {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Phone Number</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Phone Number
+            </Text>
             <TextInput
-              style={styles.input}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.phone}
               onChangeText={(text) => setFormData(prev => ({ ...prev, phone: text }))}
               placeholder="Enter your phone number"
@@ -141,10 +151,12 @@ const edit: React.FC = () => {
             />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Bio</Text>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Bio
+            </Text>
             <TextInput
-              style={[styles.input, styles.bioInput]}
+              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 h-32 font-inter-regular text-base text-gray-800 dark:text-gray-100"
               value={formData.bio}
               onChangeText={(text) => setFormData(prev => ({ ...prev, bio: text }))}
               placeholder="Tell us about yourself"
@@ -156,21 +168,26 @@ const edit: React.FC = () => {
           </View>
         </View>
 
-        <View style={styles.buttonContainer}>
+        {/* Buttons */}
+        <View className="flex-row gap-3">
           <TouchableOpacity
-            style={[styles.button, styles.cancelButton]}
+            className="flex-1 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg justify-center items-center"
             onPress={() => router.back()}
             disabled={isSubmitting}
           >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
+            <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300">
+              Cancel
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.saveButton, isSubmitting && styles.buttonDisabled]}
+            className={`flex-1 h-12 bg-blue-500 rounded-lg justify-center items-center ${
+              isSubmitting ? 'opacity-70' : ''
+            }`}
             onPress={handleSubmit}
             disabled={isSubmitting}
           >
-            <Text style={styles.saveButtonText}>
+            <Text className="font-inter-semibold text-base text-white">
               {isSubmitting ? 'Saving...' : 'Save Changes'}
             </Text>
           </TouchableOpacity>
@@ -178,135 +195,6 @@ const edit: React.FC = () => {
       </SafeAreaView>
     </ScrollView>
   );
-}
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  imageSection: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  imageContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 16,
-    position: 'relative',
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 60,
-  },
-  placeholderImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 60,
-    backgroundColor: '#EBF5FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 48,
-    color: '#3B82F6',
-  },
-  removeImageButton: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    backgroundColor: '#EF4444',
-    borderRadius: 20,
-    padding: 8,
-  },
-  uploadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#EBF5FF',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  uploadIcon: {
-    marginRight: 8,
-  },
-  uploadText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#3B82F6',
-  },
-  errorContainer: {
-    backgroundColor: '#FEE2E2',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  errorText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#EF4444',
-  },
-  formSection: {
-    marginBottom: 24,
-  },
-  inputGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#4B5563',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  bioInput: {
-    height: 120,
-    paddingTop: 12,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    height: 48,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#F3F4F6',
-  },
-  saveButton: {
-    backgroundColor: '#3B82F6',
-  },
-  buttonDisabled: {
-    backgroundColor: '#93C5FD',
-  },
-  cancelButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#4B5563',
-  },
-  saveButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-});
+};
 
-export default edit;
+export default EditProfile;
