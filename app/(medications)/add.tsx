@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
 const medicationTypes = [
   'Tablet',
@@ -26,6 +28,7 @@ const frequencies = [
 ];
 
 export default function AddMedicationScreen() {
+  const { theme } = useTheme();
   const [name, setName] = useState('');
   const [dosage, setDosage] = useState('');
   const [type, setType] = useState('');
@@ -85,338 +88,203 @@ export default function AddMedicationScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Add New Medication</Text>
-        <Text style={styles.subtitle}>Enter your medication details and schedule</Text>
+    <SafeAreaView className="flex-1 bg-backgroundLight dark:bg-backgroundDark">
+      <ScrollView className="flex-1">
+        <View className="p-6">
+          <Text className="font-inter-bold text-2xl text-gray-800 dark:text-textDark mb-2">
+            Add New Medication
+          </Text>
+          <Text className="font-inter-regular text-base text-gray-500 dark:text-gray-400 mb-6">
+            Enter your medication details and schedule
+          </Text>
 
-        {error && (
-          <View style={styles.errorContainer}>
-            <Ionicons name='alert' size={20} color="#EF4444" style={styles.errorIcon} />
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        )}
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Basic Information</Text>
-          
-          <View style={styles.inputContainer}>
-            <Ionicons name='medkit' size={20} color="#6B7280" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-              placeholder="Medication name"
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.dosagePrefix}>Dosage:</Text>
-            <TextInput
-              style={styles.input}
-              value={dosage}
-              onChangeText={setDosage}
-              placeholder="e.g., 500mg"
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Medication Type</Text>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={styles.typeContainer}
-          >
-            {medicationTypes.map((medicationType) => (
-              <TouchableOpacity
-                key={medicationType}
-                style={[
-                  styles.typeButton,
-                  type === medicationType && styles.typeButtonActive
-                ]}
-                onPress={() => setType(medicationType)}
-              >
-                <Text
-                  style={[
-                    styles.typeButtonText,
-                    type === medicationType && styles.typeButtonTextActive
-                  ]}
-                >
-                  {medicationType}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Schedule</Text>
-          
-          <View style={styles.frequencyContainer}>
-            {frequencies.map((freq) => (
-              <TouchableOpacity
-                key={freq}
-                style={[
-                  styles.frequencyButton,
-                  frequency === freq && styles.frequencyButtonActive
-                ]}
-                onPress={() => setFrequency(freq)}
-              >
-                <Text
-                  style={[
-                    styles.frequencyButtonText,
-                    frequency === freq && styles.frequencyButtonTextActive
-                  ]}
-                >
-                  {freq}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <TouchableOpacity
-            style={styles.inputContainer}
-            onPress={() => setShowDatePicker(true)}
-          >
-            <Ionicons name='calendar' size={20} color="#6B7280" style={styles.inputIcon} />
-            <Text style={styles.inputText}>
-              Start date: {format(startDate, 'MMMM d, yyyy')}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.inputContainer}
-            onPress={() => setShowTimePicker(true)}
-          >
-            <Ionicons name='time' size={20} color="#6B7280" style={styles.inputIcon} />
-            <Text style={styles.inputText}>
-              First dose at: {format(time, 'h:mm a')}
-            </Text>
-          </TouchableOpacity>
-
-          {showDatePicker && (
-            <DateTimePicker
-              value={startDate}
-              mode="date"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
+          {error && (
+            <View className="flex-row items-center bg-red-100 dark:bg-red-900 p-4 rounded-lg mb-6">
+              <Ionicons name='alert' size={20} color="#EF4444" className="mr-2" />
+              <Text className="flex-1 font-inter-medium text-sm text-red-500 dark:text-red-300">
+                {error}
+              </Text>
+            </View>
           )}
 
-          {showTimePicker && (
-            <DateTimePicker
-              value={time}
-              mode="time"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              onChange={handleTimeChange}
-            />
-          )}
-        </View>
+          <View className="mb-6">
+            <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300 mb-3">
+              Basic Information
+            </Text>
+            
+            <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-3 px-4 h-14">
+              <Ionicons name='medkit' size={20} color='#29B6F6' className="mr-3" />
+              <TextInput
+                className="flex-1 font-inter-regular text-base text-gray-800 dark:text-textDark"
+                value={name}
+                onChangeText={setName}
+                placeholder="Medication name"
+                placeholderTextColor='#999'
+              />
+            </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Instructions</Text>
-          <View style={[styles.inputContainer, styles.textAreaContainer]}>
-            <Ionicons name='text' size={20} color="#6B7280" style={[styles.inputIcon, { marginTop: 12 }]} />
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              value={instructions}
-              onChangeText={setInstructions}
-              placeholder="Add special instructions (e.g., take with food)"
-              placeholderTextColor="#9CA3AF"
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
+            <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-3 px-4 h-14">
+              <Text className="font-inter-medium text-base text-gray-500 dark:text-gray-400 mr-2">
+                Dosage:
+              </Text>
+              <TextInput
+                className="flex-1 font-inter-regular text-base text-gray-800 dark:text-textDark"
+                value={dosage}
+                onChangeText={setDosage}
+                placeholder="e.g., 500mg"
+                placeholderTextColor='#999'
+              />
+            </View>
+          </View>
+
+          <View className="mb-6">
+            <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300 mb-3">
+              Medication Type
+            </Text>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              className="mb-2"
+            >
+              <View className="flex-row">
+                {medicationTypes.map((medicationType) => (
+                  <TouchableOpacity
+                    key={medicationType}
+                    className={`px-4 py-2 rounded-full mr-2 ${
+                      type === medicationType 
+                        ? 'bg-blue-100 dark:bg-blue-900' 
+                        : 'bg-gray-100 dark:bg-gray-700'
+                    }`}
+                    onPress={() => setType(medicationType)}
+                  >
+                    <Text
+                      className={`font-inter-medium text-sm ${
+                        type === medicationType 
+                          ? 'text-blue-500 dark:text-blue-300' 
+                          : 'text-gray-500 dark:text-gray-400'
+                      }`}
+                    >
+                      {medicationType}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+
+          <View className="mb-6">
+            <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300 mb-3">
+              Schedule
+            </Text>
+            
+            <View className="flex-row flex-wrap gap-2 mb-4">
+              {frequencies.map((freq) => (
+                <TouchableOpacity
+                  key={freq}
+                  className={`px-4 py-2 rounded-full ${
+                    frequency === freq 
+                      ? 'bg-blue-100 dark:bg-blue-900' 
+                      : 'bg-gray-100 dark:bg-gray-700'
+                  }`}
+                  onPress={() => setFrequency(freq)}
+                >
+                  <Text
+                    className={`font-inter-medium text-sm ${
+                      frequency === freq 
+                        ? 'text-blue-500 dark:text-blue-300' 
+                        : 'text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    {freq}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity
+              className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-3 px-4 h-14"
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Ionicons name='calendar' size={20} color="#29B6F6"  className="mr-3" />
+              <Text className="font-inter-regular text-base text-gray-800 dark:text-textDark">
+                Start date: {format(startDate, 'MMMM d, yyyy')}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-3 px-4 h-14"
+              onPress={() => setShowTimePicker(true)}
+            >
+              <Ionicons name='time' size={20} color="#29B6F6"  className="mr-3" />
+              <Text className="font-inter-regular text-base text-gray-800 dark:text-textDark">
+                First dose at: {format(time, 'h:mm a')}
+              </Text>
+            </TouchableOpacity>
+
+            {showDatePicker && (
+              <DateTimePicker
+                value={startDate}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleDateChange}
+                minimumDate={new Date()}
+              />
+            )}
+
+            {showTimePicker && (
+              <DateTimePicker
+                value={time}
+                mode="time"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleTimeChange}
+              />
+            )}
+          </View>
+
+          <View className="mb-6">
+            <Text className={`font-inter-semibold text-base ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'} mb-3`}>
+              Instructions
+            </Text>
+            <View className="flex-row items-start bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-3 px-4 h-32">
+              <Ionicons name='text' size={20} color="#6B7280"  className="mr-3 mt-4" />
+              <TextInput
+                className="flex-1 font-inter-regular text-base text-gray-800 dark:text-textDark h-full pt-4"
+                value={instructions}
+                onChangeText={setInstructions}
+                placeholder="Add special instructions (e.g., take with food)"
+                placeholderTextColor='#999'
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
+          </View>
+
+          <View className="flex-row gap-3 mt-6">
+            <TouchableOpacity
+              className="flex-1 h-14 rounded-xl bg-gray-100 dark:bg-gray-700 justify-center items-center"
+              onPress={() => router.back()}
+              disabled={isSubmitting}
+            >
+              <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300">
+                Cancel
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className={`flex-1 h-14 rounded-xl justify-center items-center ${
+                isSubmitting ? 'bg-blue-300 dark:bg-blue-700' : 'bg-blue-500 dark:bg-blue-600'
+              }`}
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+            >
+              <Text className="font-inter-semibold text-base text-white">
+                {isSubmitting ? 'Adding...' : 'Add Medication'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.cancelButton]}
-            onPress={() => router.back()}
-            disabled={isSubmitting}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.button, styles.submitButton, isSubmitting && styles.buttonDisabled]}
-            onPress={handleSubmit}
-            disabled={isSubmitting}
-          >
-            <Text style={styles.submitButtonText}>
-              {isSubmitting ? 'Adding...' : 'Add Medication'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    color: '#1F2937',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#6B7280',
-    marginBottom: 24,
-  },
-  errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FEE2E2',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  errorIcon: {
-    marginRight: 8,
-  },
-  errorText: {
-    flex: 1,
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#EF4444',
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#4B5563',
-    marginBottom: 12,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    marginBottom: 12,
-    paddingHorizontal: 16,
-    height: 56,
-  },
-  inputIcon: {
-    marginRight: 12,
-  },
-  input: {
-    flex: 1,
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  dosagePrefix: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
-    color: '#6B7280',
-    marginRight: 8,
-  },
-  typeContainer: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  typeButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
-    marginRight: 8,
-  },
-  typeButtonActive: {
-    backgroundColor: '#EBF5FF',
-  },
-  typeButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  typeButtonTextActive: {
-    color: '#3B82F6',
-  },
-  frequencyContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 16,
-  },
-  frequencyButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
-  },
-  frequencyButtonActive: {
-    backgroundColor: '#EBF5FF',
-  },
-  frequencyButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  frequencyButtonTextActive: {
-    color: '#3B82F6',
-  },
-  inputText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  textAreaContainer: {
-    height: 120,
-    alignItems: 'flex-start',
-  },
-  textArea: {
-    height: '100%',
-    paddingTop: 16,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 24,
-  },
-  button: {
-    flex: 1,
-    height: 56,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#F3F4F6',
-  },
-  submitButton: {
-    backgroundColor: '#3B82F6',
-  },
-  buttonDisabled: {
-    backgroundColor: '#93C5FD',
-  },
-  cancelButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#4B5563',
-  },
-  submitButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-});

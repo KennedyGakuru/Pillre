@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import AppointmentListItem from 'components/AppointmentListItem';
 import { useAppointments } from 'hooks/useAppointments';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
 export default function AppointmentsScreen() {
   const { appointments } = useAppointments();
   const [searchQuery, setSearchQuery] = useState('');
+  const { theme } = useTheme();
   
   const filteredAppointments = appointments.filter(appointment => 
     appointment.doctorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -16,21 +18,23 @@ export default function AppointmentsScreen() {
   );
 
   const renderHeader = () => (
-    <View style={styles.header}>
-      <View style={styles.headerRow}>
-        <Text style={styles.title}>Appointments</Text>
+    <View className="px-4 pb-4">
+      <View className="flex-row justify-between items-center mb-4">
+        <Text className="font-inter-bold text-2xl text-gray-800 dark:text-gray-100">
+          Appointments
+        </Text>
         <TouchableOpacity 
-          style={styles.addButton}
+          className="w-10 h-10 rounded-full bg-blue-500 justify-center items-center"
           onPress={() => router.push('/appointments/book')}
         >
           <Ionicons name="add-circle" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
       
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#6B7280" style={styles.searchIcon} />
+      <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-xl px-3 h-12 mb-4 border border-gray-200 dark:border-gray-700">
+        <Ionicons name="search" size={20} color="#6B7280" className="mr-2 dark:text-gray-400" />
         <TextInput
-          style={styles.searchInput}
+          className="flex-1 font-inter-regular text-base text-gray-800 dark:text-gray-100"
           placeholder="Search appointments..."
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -38,42 +42,44 @@ export default function AppointmentsScreen() {
         />
       </View>
       
-      <View style={styles.filterContainer}>
-        <TouchableOpacity style={[styles.filterButton, styles.filterButtonActive]}>
-          <Text style={styles.filterButtonTextActive}>All</Text>
+      <View className="flex-row mb-2">
+        <TouchableOpacity className="px-4 py-2 rounded-lg mr-2 bg-blue-100 dark:bg-blue-900">
+          <Text className="font-inter-medium text-sm text-blue-500 dark:text-blue-300">All</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>Upcoming</Text>
+        <TouchableOpacity className="px-4 py-2 rounded-lg mr-2">
+          <Text className="font-inter-medium text-sm text-gray-500 dark:text-gray-400">Upcoming</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterButtonText}>Past</Text>
+        <TouchableOpacity className="px-4 py-2 rounded-lg">
+          <Text className="font-inter-medium text-sm text-gray-500 dark:text-gray-400">Past</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 
   const renderEmptyList = () => (
-    <View style={styles.emptyContainer}>
-      <View style={styles.emptyIconContainer}>
+    <View className="flex-1 items-center justify-center pt-20 px-6">
+      <View className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900/30 justify-center items-center mb-6">
         <Ionicons name="calendar" size={40} color="#3B82F6" />
       </View>
-      <Text style={styles.emptyTitle}>No appointments found</Text>
-      <Text style={styles.emptyMessage}>
+      <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-2">
+        No appointments found
+      </Text>
+      <Text className="font-inter-regular text-base text-gray-500 dark:text-gray-400 text-center mb-6">
         {searchQuery ? 'Try a different search term' : 'Schedule your first appointment to get started'}
       </Text>
       {!searchQuery && (
         <TouchableOpacity 
-          style={styles.emptyButton}
+          className="bg-blue-500 rounded-xl py-3 px-6"
           onPress={() => router.push('/appointments/book')}
         >
-          <Text style={styles.emptyButtonText}>Book Appointment</Text>
+          <Text className="font-inter-semibold text-base text-white">Book Appointment</Text>
         </TouchableOpacity>
       )}
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       <FlatList
         data={filteredAppointments}
         keyExtractor={(item) => item.id}
@@ -85,125 +91,8 @@ export default function AppointmentsScreen() {
         )}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={renderEmptyList}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={{ paddingBottom: 24, flexGrow: 1 }}
       />
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    color: '#1F2937',
-  },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#3B82F6',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 48,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  filterContainer: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  filterButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    marginRight: 8,
-  },
-  filterButtonActive: {
-    backgroundColor: '#EBF5FF',
-  },
-  filterButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  filterButtonTextActive: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#3B82F6',
-  },
-  listContent: {
-    paddingBottom: 24,
-    flexGrow: 1,
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 80,
-    paddingHorizontal: 24,
-  },
-  emptyIconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#EBF5FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  emptyTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginBottom: 8,
-  },
-  emptyMessage: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#6B7280',
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  emptyButton: {
-    backgroundColor: '#3B82F6',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-  },
-  emptyButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-});

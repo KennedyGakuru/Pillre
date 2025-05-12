@@ -4,6 +4,7 @@ import { useAuth, User as BaseUser } from 'context/AuthContext';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
+import { useTheme } from 'theme/colorScheme';
 
 interface User extends BaseUser {
   address?: string;
@@ -22,6 +23,7 @@ const personalinfo: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const {theme} = useTheme();
   
   const [formData, setFormData] = useState({
     address:  '',

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Switch, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Switch, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from 'context/AuthContext';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuth();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { theme } = useTheme();
   
   const handleSignOut = () => {
     Alert.alert(
@@ -91,49 +93,60 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       <ScrollView>
-        <View style={styles.header}>
-          <View style={styles.profileContainer}>
-            <View style={styles.avatarContainer}>
-              <Text style={styles.avatarText}>{user?.name?.charAt(0) || 'U'}</Text>
+        <View className="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 mb-5">
+          <View className="flex-row items-center mb-4">
+            <View className="w-15 h-15 rounded-full bg-blue-100 dark:bg-blue-900/30 items-center justify-center mr-4">
+              <Text className="font-inter-semibold text-2xl text-blue-500">
+                {user?.name?.charAt(0) || 'U'}
+              </Text>
             </View>
-            <View style={styles.profileInfo}>
-              <Text style={styles.name}>{user?.name || 'User'}</Text>
-              <Text style={styles.email}>{user?.email || 'user@example.com'}</Text>
+            <View className="flex-1">
+              <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-1">
+                {user?.name || 'User'}
+              </Text>
+              <Text className="font-inter-regular text-sm text-gray-500 dark:text-gray-400">
+                {user?.email || 'user@example.com'}
+              </Text>
             </View>
           </View>
           
           <TouchableOpacity 
-            style={styles.editButton}
+            className="bg-blue-100 dark:bg-blue-900/30 rounded-lg py-2 px-4 self-start"
             onPress={() => router.push('/(profile)/edit')}
           >
-            <Text style={styles.editButtonText}>Edit Profile</Text>
+            <Text className="font-inter-medium text-sm text-blue-500 dark:text-blue-300">
+              Edit Profile
+            </Text>
           </TouchableOpacity>
         </View>
         
         {profileSections.map((section, sectionIndex) => (
-          <View key={`section-${sectionIndex}`} style={styles.section}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
+          <View key={`section-${sectionIndex}`} className="mb-5 px-4">
+            <Text className="font-inter-semibold text-sm text-gray-500 dark:text-gray-400 mb-2 ml-2">
+              {section.title}
+            </Text>
             
-            <View style={styles.menuContainer}>
+            <View className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
               {section.items.map((item, itemIndex) => (
                 <TouchableOpacity 
                   key={`item-${sectionIndex}-${itemIndex}`}
-                  style={[
-                    styles.menuItem,
-                    itemIndex === section.items.length - 1 && styles.menuItemLast
-                  ]}
+                  className={`flex-row items-center justify-between py-4 px-4 ${
+                    itemIndex !== section.items.length - 1 ? 'border-b border-gray-200 dark:border-gray-700' : ''
+                  }`}
                   onPress={item.onPress}
                   disabled={!item.onPress}
                 >
-                  <View style={styles.menuItemLeft}>
+                  <View className="flex-row items-center">
                     {item.icon}
-                    <Text style={styles.menuItemLabel}>{item.label}</Text>
+                    <Text className="font-inter-medium text-base text-gray-800 dark:text-gray-100 ml-3">
+                      {item.label}
+                    </Text>
                   </View>
                   
-                  <View style={styles.menuItemRight}>
-                    {item.rightElement  }
+                  <View>
+                    {item.rightElement}
                   </View>
                 </TouchableOpacity>
               ))}
@@ -141,142 +154,20 @@ export default function ProfileScreen() {
           </View>
         ))}
         
-        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-          <Ionicons name="log-out-outline" size={20} color="#EF4444" style={styles.signOutIcon} />
-          <Text style={styles.signOutText}>Sign Out</Text>
+        <TouchableOpacity 
+          className="flex-row items-center justify-center bg-red-100 dark:bg-red-900/30 py-3 mx-4 my-4 rounded-xl"
+          onPress={handleSignOut}
+        >
+          <Ionicons name="log-out-outline" size={20} color="#EF4444" />
+          <Text className="font-inter-semibold text-base text-red-500 dark:text-red-300 ml-2">
+            Sign Out
+          </Text>
         </TouchableOpacity>
         
-        <Text style={styles.version}>Version 1.0.0</Text>
+        <Text className="font-inter-regular text-xs text-gray-400 dark:text-gray-500 text-center mb-10">
+          Version 1.0.0
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  header: {
-    padding: 24,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-    marginBottom: 20,
-  },
-  profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  avatarContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#EBF5FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 16,
-  },
-  avatarText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 24,
-    color: '#3B82F6',
-  },
-  profileInfo: {
-    flex: 1,
-  },
-  name: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  email: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  editButton: {
-    backgroundColor: '#EBF5FF',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    alignSelf: 'flex-start',
-  },
-  editButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#3B82F6',
-  },
-  section: {
-    marginBottom: 20,
-    paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#6B7280',
-    marginBottom: 8,
-    marginLeft: 8,
-  },
-  menuContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  menuItemLast: {
-    borderBottomWidth: 0,
-  },
-  menuItemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  menuItemLabel: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
-    color: '#1F2937',
-    marginLeft: 12,
-  },
-  menuItemRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  signOutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-    marginBottom: 40,
-    paddingVertical: 12,
-    backgroundColor: '#FEE2E2',
-    marginHorizontal: 16,
-    borderRadius: 12,
-  },
-  signOutIcon: {
-    marginRight: 8,
-  },
-  signOutText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#EF4444',
-  },
-  version: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: '#9CA3AF',
-    textAlign: 'center',
-    marginBottom: 40,
-  },
-});

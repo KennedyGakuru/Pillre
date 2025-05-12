@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Switch, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const settings: React.FC = () => {
-    const [medicationReminders, setMedicationReminders] = useState(true);
+const Settings: React.FC = () => {
+  const { theme } = useTheme();
+  const [medicationReminders, setMedicationReminders] = useState(true);
   const [appointmentReminders, setAppointmentReminders] = useState(true);
   const [healthTips, setHealthTips] = useState(true);
   const [emergencyAlerts, setEmergencyAlerts] = useState(true);
@@ -29,10 +32,14 @@ const settings: React.FC = () => {
     title: string,
     description: string
   ) => (
-    <View style={styles.settingItem}>
-      <View style={styles.settingInfo}>
-        <Text style={styles.settingTitle}>{title}</Text>
-        <Text style={styles.settingDescription}>{description}</Text>
+    <View className="flex-row items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
+      <View className="flex-1 mr-4">
+        <Text className="font-inter-medium text-base text-gray-800 dark:text-gray-100 mb-1">
+          {title}
+        </Text>
+        <Text className="font-inter-regular text-sm text-gray-500 dark:text-gray-400">
+          {description}
+        </Text>
       </View>
       <Switch
         value={value}
@@ -42,13 +49,18 @@ const settings: React.FC = () => {
       />
     </View>
   );
-    return(
-        <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
+
+  return (
+    <SafeAreaView className='flex-1'>
+    <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
+      <View className="p-6">
+        {/* Notification Settings */}
+        <View className="mb-8">
+          <View className="flex-row items-center mb-4">
             <Ionicons name="notifications" size={20} color="#3B82F6" />
-            <Text style={styles.sectionTitle}>Notifications</Text>
+            <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
+              Notifications
+            </Text>
           </View>
 
           {renderSettingSwitch(
@@ -80,10 +92,13 @@ const settings: React.FC = () => {
           )}
         </View>
 
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
+        {/* Display Settings */}
+        <View className="mb-8">
+          <View className="flex-row items-center mb-4">
             <Ionicons name="moon" size={20} color="#3B82F6" />
-            <Text style={styles.sectionTitle}>Display</Text>
+            <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
+              Display
+            </Text>
           </View>
 
           {renderSettingSwitch(
@@ -108,27 +123,32 @@ const settings: React.FC = () => {
           )}
         </View>
 
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
+        {/* Language Settings */}
+        <View className="mb-8">
+          <View className="flex-row items-center mb-4">
             <Ionicons name="globe-outline" size={20} color="#3B82F6" />
-            <Text style={styles.sectionTitle}>Language</Text>
+            <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
+              Language
+            </Text>
           </View>
 
-          <View style={styles.languageContainer}>
+          <View className="flex-row flex-wrap gap-2">
             {languages.map((language) => (
               <TouchableOpacity
                 key={language}
-                style={[
-                  styles.languageOption,
-                  language === selectedLanguage && styles.languageOptionSelected,
-                ]}
+                className={`px-4 py-2 rounded-full ${
+                  language === selectedLanguage
+                    ? 'bg-blue-100 dark:bg-blue-900'
+                    : 'bg-gray-100 dark:bg-gray-700'
+                }`}
                 onPress={() => setSelectedLanguage(language)}
               >
                 <Text
-                  style={[
-                    styles.languageText,
-                    language === selectedLanguage && styles.languageTextSelected,
-                  ]}
+                  className={`font-inter-medium text-sm ${
+                    language === selectedLanguage
+                      ? 'text-blue-500 dark:text-blue-300'
+                      : 'text-gray-500 dark:text-gray-400'
+                  }`}
                 >
                   {language}
                 </Text>
@@ -137,10 +157,13 @@ const settings: React.FC = () => {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
+        {/* Data & Storage Settings */}
+        <View className="mb-8">
+          <View className="flex-row items-center mb-4">
             <Ionicons name="wifi" size={20} color="#3B82F6" />
-            <Text style={styles.sectionTitle}>Data & Storage</Text>
+            <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
+              Data & Storage
+            </Text>
           </View>
 
           {renderSettingSwitch(
@@ -172,134 +195,27 @@ const settings: React.FC = () => {
           )}
         </View>
 
-        <View style={styles.storageInfo}>
-          <Text style={styles.storageTitle}>Storage Usage</Text>
-          <View style={styles.storageBar}>
-            <View style={[styles.storageUsed, { width: '65%' }]} />
+        {/* Storage Info */}
+        <View className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+          <Text className="font-inter-semibold text-base text-gray-800 dark:text-gray-100 mb-3">
+            Storage Usage
+          </Text>
+          <View className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-2">
+            <View className="h-full bg-blue-500 rounded-full w-[65%]" />
           </View>
-          <Text style={styles.storageText}>
+          <Text className="font-inter-regular text-sm text-gray-500 dark:text-gray-400 mb-4">
             Using 650 MB of 1 GB
           </Text>
-          <TouchableOpacity style={styles.clearButton}>
-            <Text style={styles.clearButtonText}>Clear Cache</Text>
+          <TouchableOpacity className="bg-blue-100 dark:bg-blue-900/30 py-3 rounded-lg items-center">
+            <Text className="font-inter-medium text-sm text-blue-500 dark:text-blue-300">
+              Clear Cache
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  section: {
-    marginBottom: 32,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginLeft: 8,
-  },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  settingInfo: {
-    flex: 1,
-    marginRight: 16,
-  },
-  settingTitle: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  settingDescription: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  languageContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  languageOption: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
-  },
-  languageOptionSelected: {
-    backgroundColor: '#EBF5FF',
-  },
-  languageText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  languageTextSelected: {
-    color: '#3B82F6',
-  },
-  storageInfo: {
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  storageTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 12,
-  },
-  storageBar: {
-    height: 8,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 4,
-    marginBottom: 8,
-  },
-  storageUsed: {
-    height: '100%',
-    backgroundColor: '#3B82F6',
-    borderRadius: 4,
-  },
-  storageText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 16,
-  },
-  clearButton: {
-    backgroundColor: '#EBF5FF',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  clearButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#3B82F6',
-  },
-});
-
-export default settings;
+export default Settings;

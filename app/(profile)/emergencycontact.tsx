@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
+
 
 interface EmergencyContact {
   id: string;
@@ -11,8 +13,9 @@ interface EmergencyContact {
   address?: string;
 }
 
-const emergencycontact: React.FC = () => {
-    const [contacts, setContacts] = useState<EmergencyContact[]>([
+const EmergencyContactScreen: React.FC = () => {
+  const { theme } = useTheme();
+  const [contacts, setContacts] = useState<EmergencyContact[]>([
     {
       id: '1',
       name: 'John Doe',
@@ -84,259 +87,155 @@ const emergencycontact: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to save contacts');
     }
   };
-    return(
-        <ScrollView style={styles.container}>
-      <View style={styles.content}>
+
+  return (
+    <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
+    <ScrollView className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
+      <View className="p-6">
         {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+          <View className="bg-red-100 p-4 rounded-lg mb-6">
+            <Text className="font-inter-medium text-red-500 text-sm">{error}</Text>
           </View>
         )}
 
-        <Text style={styles.description}>
+        <Text className={`font-inter-regular text-base mb-6 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
           Add emergency contacts who should be notified in case of an emergency.
         </Text>
 
         {contacts.map((contact, index) => (
-          <View key={contact.id} style={styles.contactCard}>
-            <View style={styles.contactHeader}>
-              <Text style={styles.contactTitle}>
+          <View 
+            key={contact.id} 
+            className={`rounded-xl p-4 mb-4 border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}
+          >
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className={`font-inter-semibold text-lg ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
                 Contact {index + 1}
               </Text>
               <TouchableOpacity
-                style={styles.deleteButton}
+                className="p-2"
                 onPress={() => deleteContact(contact.id)}
               >
                 <Ionicons name="trash-bin" size={20} color="#EF4444" />
               </TouchableOpacity>
             </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Full Name *</Text>
+            <View className="mb-4">
+              <Text className={`font-inter-medium text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Full Name *
+              </Text>
               <TextInput
-                style={styles.input}
                 value={contact.name}
                 onChangeText={(text) => updateContact(contact.id, 'name', text)}
                 placeholder="Enter contact name"
-                placeholderTextColor="#9CA3AF"
                 editable={isEditing}
+                className={`border rounded-lg p-3 font-inter-regular text-base ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'}`}
               />
             </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Relationship *</Text>
+            {/* Repeat the same pattern for other fields */}
+            <View className="mb-4">
+              <Text className={`font-inter-medium text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Relationship *
+              </Text>
               <TextInput
-                style={styles.input}
                 value={contact.relationship}
                 onChangeText={(text) => updateContact(contact.id, 'relationship', text)}
                 placeholder="Enter relationship"
-                placeholderTextColor="#9CA3AF"
                 editable={isEditing}
+                className={`border rounded-lg p-3 font-inter-regular text-base ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'}`}
               />
             </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Primary Phone *</Text>
+            <View className="mb-4">
+              <Text className={`font-inter-medium text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Primary Phone *
+              </Text>
               <TextInput
-                style={styles.input}
                 value={contact.primaryPhone}
                 onChangeText={(text) => updateContact(contact.id, 'primaryPhone', text)}
                 placeholder="Enter primary phone"
-                placeholderTextColor="#9CA3AF"
                 keyboardType="phone-pad"
                 editable={isEditing}
+                className={`border rounded-lg p-3 font-inter-regular text-base ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'}`}
               />
             </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Secondary Phone</Text>
+            <View className="mb-4">
+              <Text className={`font-inter-medium text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Secondary Phone
+              </Text>
               <TextInput
-                style={styles.input}
                 value={contact.secondaryPhone}
                 onChangeText={(text) => updateContact(contact.id, 'secondaryPhone', text)}
                 placeholder="Enter secondary phone"
-                placeholderTextColor="#9CA3AF"
                 keyboardType="phone-pad"
                 editable={isEditing}
+                className={`border rounded-lg p-3 font-inter-regular text-base ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'}`}
               />
             </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Address</Text>
+            <View className="mb-4">
+              <Text className={`font-inter-medium text-sm mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Address
+              </Text>
               <TextInput
-                style={[styles.input, styles.addressInput]}
                 value={contact.address}
                 onChangeText={(text) => updateContact(contact.id, 'address', text)}
                 placeholder="Enter contact address"
-                placeholderTextColor="#9CA3AF"
                 multiline
                 numberOfLines={3}
                 editable={isEditing}
+                className={`border rounded-lg p-3 h-20 font-inter-regular text-base ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400' : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'}`}
               />
             </View>
           </View>
         ))}
 
         <TouchableOpacity
-          style={styles.addButton}
+          className={`flex-row items-center justify-center p-4 rounded-lg mb-6 ${theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-50'}`}
           onPress={addNewContact}
           disabled={!isEditing}
         >
-          <Ionicons name='add' size={20} color="#3B82F6"  />
-          <Text style={styles.addButtonText}>Add Another Contact</Text>
+          <Ionicons name='add' size={20} color="#3B82F6" />
+          <Text className="font-inter-medium text-blue-500 ml-2">Add Another Contact</Text>
         </TouchableOpacity>
 
-        <View style={styles.buttonContainer}>
+        <View className="flex-row gap-3">
           {isEditing ? (
             <>
               <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
+                className={`flex-1 h-12 rounded-lg justify-center items-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}
                 onPress={() => setIsEditing(false)}
               >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+                <Text className={`font-inter-semibold text-base ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.button, styles.saveButton]}
+                className="flex-1 h-12 bg-blue-500 rounded-lg justify-center items-center"
                 onPress={handleSave}
               >
-                <Text style={styles.saveButtonText}>Save Changes</Text>
+                <Text className="font-inter-semibold text-white text-base">
+                  Save Changes
+                </Text>
               </TouchableOpacity>
             </>
           ) : (
             <TouchableOpacity
-              style={[styles.button, styles.editButton]}
+              className="flex-1 h-12 bg-blue-500 rounded-lg justify-center items-center"
               onPress={() => setIsEditing(true)}
             >
-              <Text style={styles.editButtonText}>Edit Contacts</Text>
+              <Text className="font-inter-semibold text-white text-base">
+                Edit Contacts
+              </Text>
             </TouchableOpacity>
           )}
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  description: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#6B7280',
-    marginBottom: 24,
-  },
-  errorContainer: {
-    backgroundColor: '#FEE2E2',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  errorText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#EF4444',
-  },
-  contactCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  contactHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  contactTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-  },
-  deleteButton: {
-    padding: 8,
-  },
-  inputGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#4B5563',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  addressInput: {
-    height: 80,
-    textAlignVertical: 'top',
-  },
-  addButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#EBF5FF',
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  addButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
-    color: '#3B82F6',
-    marginLeft: 8,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    height: 48,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  editButton: {
-    backgroundColor: '#3B82F6',
-  },
-  cancelButton: {
-    backgroundColor: '#F3F4F6',
-  },
-  saveButton: {
-    backgroundColor: '#3B82F6',
-  },
-  editButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-  cancelButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#4B5563',
-  },
-  saveButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-});
-
-export default emergencycontact;
+export default EmergencyContactScreen;

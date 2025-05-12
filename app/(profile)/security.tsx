@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Switch } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Switch } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
-const security: React.FC = () => {
-    const [currentPassword, setCurrentPassword] = useState('');
+const Security: React.FC = () => {
+  const { theme } = useTheme();
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -36,10 +38,8 @@ const security: React.FC = () => {
         throw new Error('New password must be at least 8 characters long');
       }
 
-      // Password change logic here
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Reset form
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
@@ -50,269 +50,173 @@ const security: React.FC = () => {
     }
   };
 
-    return(
-       <ScrollView style={styles.container}>
-      <View style={styles.content}>
+  const renderPasswordInput = (
+    value: string,
+    onChangeText: (text: string) => void,
+    showPassword: boolean,
+    setShowPassword: (show: boolean) => void,
+    placeholder: string
+  ) => (
+    <View className="flex-row items-center bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+      <TextInput
+        className="flex-1 px-4 py-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={!showPassword}
+        placeholder={placeholder}
+        placeholderTextColor="#9CA3AF"
+      />
+      <TouchableOpacity
+        className="px-3 py-3"
+        onPress={() => setShowPassword(!showPassword)}
+      >
+        <Ionicons 
+          name={showPassword ? "eye-off" : "eye"} 
+          size={20} 
+          color="#6B7280" 
+          className="dark:text-gray-400"
+        />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderSecurityToggle = (
+    value: boolean,
+    onValueChange: (value: boolean) => void,
+    label: string,
+    description: string
+  ) => (
+    <View className="flex-row items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
+      <View className="flex-1 mr-4">
+        <Text className="font-inter-medium text-base text-gray-800 dark:text-gray-100 mb-1">
+          {label}
+        </Text>
+        <Text className="font-inter-regular text-sm text-gray-500 dark:text-gray-400">
+          {description}
+        </Text>
+      </View>
+      <Switch
+        value={value}
+        onValueChange={onValueChange}
+        trackColor={{ false: '#D1D5DB', true: '#BFDBFE' }}
+        thumbColor={value ? '#3B82F6' : '#9CA3AF'}
+      />
+    </View>
+  );
+
+  return (
+    <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
+      <View className="p-6">
         {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+          <View className="bg-red-100 dark:bg-red-900/30 p-4 rounded-lg mb-6">
+            <Text className="font-inter-medium text-sm text-red-500 dark:text-red-300">
+              {error}
+            </Text>
           </View>
         )}
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Change Password</Text>
+        {/* Change Password Section */}
+        <View className="mb-8">
+          <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-4">
+            Change Password
+          </Text>
           
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Current Password</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                value={currentPassword}
-                onChangeText={setCurrentPassword}
-                secureTextEntry={!showCurrentPassword}
-                placeholder="Enter current password"
-                placeholderTextColor="#9CA3AF"
-              />
-              <TouchableOpacity
-                style={styles.eyeButton}
-                onPress={() => setShowCurrentPassword(!showCurrentPassword)}
-              >
-                {showCurrentPassword ? (
-                  <Ionicons name="eye-off" size={20} color="#6B7280" />
-                ) : (
-                  <Ionicons name="eye" size={20} color="#6B7280" />
-                )}
-              </TouchableOpacity>
-            </View>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Current Password
+            </Text>
+            {renderPasswordInput(
+              currentPassword,
+              setCurrentPassword,
+              showCurrentPassword,
+              setShowCurrentPassword,
+              'Enter current password'
+            )}
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>New Password</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                value={newPassword}
-                onChangeText={setNewPassword}
-                secureTextEntry={!showNewPassword}
-                placeholder="Enter new password"
-                placeholderTextColor="#9CA3AF"
-              />
-              <TouchableOpacity
-                style={styles.eyeButton}
-                onPress={() => setShowNewPassword(!showNewPassword)}
-              >
-                {showNewPassword ? (
-                  <Ionicons name="eye-off" size={20} color="#6B7280" />
-                ) : (
-                  <Ionicons name="eye" size={20} color="#6B7280" />
-                )}
-              </TouchableOpacity>
-            </View>
+          <View className="mb-4">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              New Password
+            </Text>
+            {renderPasswordInput(
+              newPassword,
+              setNewPassword,
+              showNewPassword,
+              setShowNewPassword,
+              'Enter new password'
+            )}
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Confirm New Password</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry={!showConfirmPassword}
-                placeholder="Confirm new password"
-                placeholderTextColor="#9CA3AF"
-              />
-              <TouchableOpacity
-                style={styles.eyeButton}
-                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                {showConfirmPassword ? (
-                  <Ionicons name="eye-off" size={20} color="#6B7280" />
-                ) : (
-                  <Ionicons name="eye" size={20} color="#6B7280" />
-                )}
-              </TouchableOpacity>
-            </View>
+          <View className="mb-6">
+            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
+              Confirm New Password
+            </Text>
+            {renderPasswordInput(
+              confirmPassword,
+              setConfirmPassword,
+              showConfirmPassword,
+              setShowConfirmPassword,
+              'Confirm new password'
+            )}
           </View>
 
           <TouchableOpacity
-            style={[styles.button, isSubmitting && styles.buttonDisabled]}
+            className={`bg-blue-500 rounded-lg py-3 items-center ${
+              isSubmitting ? 'opacity-70' : ''
+            }`}
             onPress={handleChangePassword}
             disabled={isSubmitting}
           >
-            <Text style={styles.buttonText}>
+            <Text className="font-inter-semibold text-base text-white">
               {isSubmitting ? 'Changing Password...' : 'Change Password'}
             </Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Two-Factor Authentication</Text>
+        {/* Two-Factor Authentication Section */}
+        <View className="mb-8">
+          <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-4">
+            Two-Factor Authentication
+          </Text>
           
-          <View style={styles.settingItem}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Enable Two-Factor Authentication</Text>
-              <Text style={styles.settingDescription}>
-                Add an extra layer of security to your account
-              </Text>
-            </View>
-            <Switch
-              value={twoFactorEnabled}
-              onValueChange={setTwoFactorEnabled}
-              trackColor={{ false: '#D1D5DB', true: '#BFDBFE' }}
-              thumbColor={twoFactorEnabled ? '#3B82F6' : '#9CA3AF'}
-            />
-          </View>
+          {renderSecurityToggle(
+            twoFactorEnabled,
+            setTwoFactorEnabled,
+            'Enable Two-Factor Authentication',
+            'Add an extra layer of security to your account'
+          )}
 
-          <View style={styles.settingItem}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Biometric Authentication</Text>
-              <Text style={styles.settingDescription}>
-                Use Face ID or Touch ID to log in
-              </Text>
-            </View>
-            <Switch
-              value={biometricEnabled}
-              onValueChange={setBiometricEnabled}
-              trackColor={{ false: '#D1D5DB', true: '#BFDBFE' }}
-              thumbColor={biometricEnabled ? '#3B82F6' : '#9CA3AF'}
-            />
-          </View>
+          {renderSecurityToggle(
+            biometricEnabled,
+            setBiometricEnabled,
+            'Biometric Authentication',
+            'Use Face ID or Touch ID to log in'
+          )}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Privacy Preferences</Text>
+        {/* Privacy Preferences Section */}
+        <View className="mb-8">
+          <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-4">
+            Privacy Preferences
+          </Text>
 
-          <View style={styles.settingItem}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Remember This Device</Text>
-              <Text style={styles.settingDescription}>
-                Stay logged in on this device
-              </Text>
-            </View>
-            <Switch
-              value={rememberDevice}
-              onValueChange={setRememberDevice}
-              trackColor={{ false: '#D1D5DB', true: '#BFDBFE' }}
-              thumbColor={rememberDevice ? '#3B82F6' : '#9CA3AF'}
-            />
-          </View>
+          {renderSecurityToggle(
+            rememberDevice,
+            setRememberDevice,
+            'Remember This Device',
+            'Stay logged in on this device'
+          )}
 
-          <View style={styles.settingItem}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Show Login History</Text>
-              <Text style={styles.settingDescription}>
-                View recent account activity
-              </Text>
-            </View>
-            <Switch
-              value={showLoginHistory}
-              onValueChange={setShowLoginHistory}
-              trackColor={{ false: '#D1D5DB', true: '#BFDBFE' }}
-              thumbColor={showLoginHistory ? '#3B82F6' : '#9CA3AF'}
-            />
-          </View>
+          {renderSecurityToggle(
+            showLoginHistory,
+            setShowLoginHistory,
+            'Show Login History',
+            'View recent account activity'
+          )}
         </View>
       </View>
     </ScrollView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  errorContainer: {
-    backgroundColor: '#FEE2E2',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  errorText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#EF4444',
-  },
-  section: {
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginBottom: 16,
-  },
-  inputGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#4B5563',
-    marginBottom: 8,
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-  },
-  passwordInput: {
-    flex: 1,
-    padding: 12,
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  eyeButton: {
-    padding: 12,
-  },
-  button: {
-    backgroundColor: '#3B82F6',
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    backgroundColor: '#93C5FD',
-  },
-  buttonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  settingInfo: {
-    flex: 1,
-    marginRight: 16,
-  },
-  settingLabel: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  settingDescription: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-});
-
-export default security;
+export default Security;

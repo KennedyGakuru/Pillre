@@ -1,4 +1,6 @@
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useTheme } from 'theme/colorScheme';
 
 interface Stat {
   label: string;
@@ -11,66 +13,36 @@ interface HealthStatsCardProps {
 }
 
 export default function HealthStatsCard({ stats }: HealthStatsCardProps) {
+  const { theme } = useTheme();
+
   return (
-    <View style={styles.container}>
+    <View
+      className={`flex-row p-4 rounded-2xl shadow-md ${
+        theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'
+      }`}
+    >
       {stats.map((stat, index) => (
-        <View 
-          key={stat.label} 
-          style={[
-            styles.statItem,
-            index < stats.length - 1 && styles.withDivider
-          ]}
+        <View
+          key={stat.label}
+          className={`flex-1 items-center px-2 ${
+            index < stats.length - 1 ? 'border-r border-gray-200 dark:border-gray-700' : ''
+          }`}
         >
-          <View style={styles.iconContainer}>
+          <View className="w-10 h-10 rounded-full bg-[#EBF5FF] justify-center items-center mb-2">
             {stat.icon}
           </View>
-          <Text style={styles.statValue}>{stat.value}</Text>
-          <Text style={styles.statLabel}>{stat.label}</Text>
+
+          <Text
+            className={`text-lg font-[Inter-Bold] mb-1 ${
+              theme === 'dark' ? 'text-textDark' : 'text-textLight'
+            }`}
+          >
+            {stat.value}
+          </Text>
+
+          <Text className="text-xs text-gray-500 font-[Inter-Regular]">{stat.label}</Text>
         </View>
       ))}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
-    flexDirection: 'row',
-  },
-  statItem: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 8,
-  },
-  withDivider: {
-    borderRightWidth: 1,
-    borderRightColor: '#E5E7EB',
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#EBF5FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  statValue: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: '#6B7280',
-  },
-});

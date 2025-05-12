@@ -8,9 +8,11 @@ import NextMedicationCard from 'components/NextMedicationCard';
 import UpcomingAppointmentCard from 'components/UpcomingAppointmentCard';
 import HealthStatsCard from 'components/HealthStatsCard';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const {theme} = useTheme();
   
   const upcomingMedications = [
     { id: '1', name: 'Lisinopril', dosage: '10mg', time: '09:00 AM', type: 'Tablet' },
@@ -38,46 +40,50 @@ export default function HomeScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView 
+          edges={['top', 'left', 'right']}
+          className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}
+        >
       <DashboardHeader name={user?.name || 'User'} />
       
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Today's Medications</Text>
+      <ScrollView className='flex-1 px-4' showsVerticalScrollIndicator={false}>
+        <View className='mb-6'>
+          <View className='flex-row justify-between items-center m-4'>
+            <Text className={`font-inter-semibold text-lg ${theme === 'dark' ? 'text-textDark' : 'text-textLight'}`}>Today's Medications</Text>
             <TouchableOpacity 
-              style={styles.sectionButton}
+              className='p-1'
               onPress={() => router.push('/medications')}
             >
-              <Text style={styles.sectionButtonText}>See All</Text>
+              <Text className="font-medium text-sm text-primary">See All</Text>
             </TouchableOpacity>
           </View>
           
-          <View style={styles.medicationsContainer}>
+          <View  className="flex-row flex-wrap justify-between">
             {upcomingMedications.map((medication) => (
               <NextMedicationCard key={medication.id} medication={medication} />
             ))}
             
             <TouchableOpacity 
               style={styles.addButtonContainer}
+              className={`w-[31%] aspect-square justify-center items-center rounded-2xl border-2 border-dashed border-gray-300  ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}
               onPress={() => router.push('/(medications)/add')}
             >
-              <View style={styles.addButton}>
+              <View  className='w-12 h-12 rounded-full bg-blue-100 justify-center items-center mb-2'>
                 <Ionicons name="add" size={24} color="#3B82F6" />
               </View>
-              <Text style={styles.addButtonText}>Add Medicine</Text>
+              <Text className='font-medium text-xs text-primary text-center'>Add Medicine</Text>
             </TouchableOpacity>
           </View>
         </View>
         
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Upcoming Appointments</Text>
+        <View className='mb-6'>
+          <View  className='flex-row justify-between items-center mb-4'>
+            <Text className={`font-inter-bold text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Upcoming Appointments</Text>
             <TouchableOpacity 
-              style={styles.sectionButton}
+             className='p-1'
               onPress={() => router.push('/appointments')}
             >
-              <Text style={styles.sectionButtonText}>See All</Text>
+              <Text className="font-medium text-sm text-primary">See All</Text>
             </TouchableOpacity>
           </View>
           
@@ -86,16 +92,16 @@ export default function HomeScreen() {
           ))}
           
           <TouchableOpacity 
-            style={styles.scheduleButton}
+             className='bg-primary rounded-lg py-3 items-center justify-center mt-4"'
             onPress={() => router.push('/')}
           >
-            <Text style={styles.scheduleButtonText}>Book New Appointment</Text>
+            <Text className='font-bold text-base text-white'>Book New Appointment</Text>
           </TouchableOpacity>
         </View>
         
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Health Statistics</Text>
+        <View className='mb-6'>
+          <View className='flex-row items-center justify-between mb-4'>
+            <Text className={`font-inter-semibold text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Health Statistics</Text>
           </View>
           
           <HealthStatsCard 
@@ -112,41 +118,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-  },
-  sectionButton: {
-    padding: 4,
-  },
-  sectionButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#3B82F6',
-  },
-  medicationsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
+  
   addButtonContainer: {
     width: '31%',
     aspectRatio: 1,
@@ -159,32 +131,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     padding: 12,
   },
-  addButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#EBF5FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  addButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 12,
-    color: '#3B82F6',
-    textAlign: 'center',
-  },
-  scheduleButton: {
-    backgroundColor: '#3B82F6',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 16,
-  },
-  scheduleButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
+  
 });

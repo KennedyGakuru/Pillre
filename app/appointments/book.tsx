@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
-import { router } from 'expo-router';
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Platform,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
-import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useTheme } from 'theme/colorScheme';
 
 const specialties = [
-  'Cardiology',
-  'Dermatology',
-  'Endocrinology',
-  'Family Medicine',
-  'Gastroenterology',
-  'Neurology',
-  'Oncology',
-  'Pediatrics',
-  'Psychiatry',
-  'Rheumatology',
+  'Cardiology', 'Dermatology', 'Endocrinology', 'Family Medicine',
+  'Gastroenterology', 'Neurology', 'Oncology', 'Pediatrics',
+  'Psychiatry', 'Rheumatology',
 ];
 
 export default function BookAppointmentScreen() {
+  const { theme } = useTheme();
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -29,18 +32,14 @@ export default function BookAppointmentScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDateChange = (event: any, date?: Date) => {
+  const handleDateChange = (_: any, date?: Date) => {
     setShowDatePicker(false);
-    if (date) {
-      setSelectedDate(date);
-    }
+    if (date) setSelectedDate(date);
   };
 
-  const handleTimeChange = (event: any, time?: Date) => {
+  const handleTimeChange = (_: any, time?: Date) => {
     setShowTimePicker(false);
-    if (time) {
-      setSelectedTime(time);
-    }
+    if (time) setSelectedTime(time);
   };
 
   const handleSubmit = async () => {
@@ -48,17 +47,10 @@ export default function BookAppointmentScreen() {
     setIsSubmitting(true);
 
     try {
-      if (!selectedSpecialty) {
-        throw new Error('Please select a specialty');
-      }
+      if (!selectedSpecialty) throw new Error('Please select a specialty');
+      if (!location) throw new Error('Please enter a location');
 
-      if (!location) {
-        throw new Error('Please enter a location');
-      }
-
-      // Book appointment logic here
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
+      await new Promise(res => setTimeout(res, 1000));
       router.back();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to book appointment');
@@ -68,66 +60,65 @@ export default function BookAppointmentScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Book New Appointment</Text>
-        <Text style={styles.subtitle}>Schedule a visit with our healthcare providers</Text>
+    <ScrollView className={`${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'} flex-1`}>
+      <View className="p-6">
+        <Text className="text-2xl font-[Inter-Bold] text-textDark dark:text-textLight mb-2">
+          Book New Appointment
+        </Text>
+        <Text className="text-base text-gray-500 mb-6 font-[Inter-Regular]">
+          Schedule a visit with our healthcare providers
+        </Text>
 
         {error && (
-          <View style={styles.errorContainer}>
-            <Ionicons name="alert-circle" size={20} color="#EF4444" style={styles.errorIcon} />
-            <Text style={styles.errorText}>{error}</Text>
+          <View className="bg-red-100 p-4 rounded-lg flex-row items-center mb-6">
+            <Ionicons name="alert-circle" size={20} color="#EF4444" className="mr-2" />
+            <Text className="text-red-500 font-[Inter-Medium] text-sm">{error}</Text>
           </View>
         )}
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Specialty</Text>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={styles.specialtyContainer}
-          >
-            {specialties.map((specialty) => (
-              <TouchableOpacity
-                key={specialty}
-                style={[
-                  styles.specialtyButton,
-                  selectedSpecialty === specialty && styles.specialtyButtonActive
-                ]}
-                onPress={() => setSelectedSpecialty(specialty)}
-              >
-                <Text
-                  style={[
-                    styles.specialtyButtonText,
-                    selectedSpecialty === specialty && styles.specialtyButtonTextActive
-                  ]}
+        {/* Specialty Selection */}
+        <View className="mb-6">
+          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Specialty</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
+            {specialties.map((specialty) => {
+              const active = selectedSpecialty === specialty;
+              return (
+                <TouchableOpacity
+                  key={specialty}
+                  className={`rounded-full px-4 py-2 mr-2 ${active ? 'bg-blue-100' : 'bg-gray-100'}`}
+                  onPress={() => setSelectedSpecialty(specialty)}
                 >
-                  {specialty}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    className={`text-sm font-[Inter-Medium] ${active ? 'text-blue-500' : 'text-gray-600'}`}
+                  >
+                    {specialty}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Date & Time</Text>
-          
+        {/* Date & Time */}
+        <View className="mb-6">
+          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Date & Time</Text>
+
           <TouchableOpacity
-            style={styles.inputContainer}
+            className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 h-14 mb-3"
             onPress={() => setShowDatePicker(true)}
           >
-            <Ionicons name='calendar' size={20} color="#6B7280" style={styles.inputIcon} />
-            <Text style={styles.inputText}>
+            <Ionicons name="calendar" size={20} color="#6B7280" className="mr-3" />
+            <Text className="text-base font-[Inter-Regular] text-gray-800">
               {format(selectedDate, 'EEEE, MMMM d, yyyy')}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.inputContainer}
+            className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 h-14"
             onPress={() => setShowTimePicker(true)}
           >
-            <Ionicons name='time' size={20} color="#6B7280" style={styles.inputIcon} />
-            <Text style={styles.inputText}>
+            <Ionicons name="time" size={20} color="#6B7280" className="mr-3" />
+            <Text className="text-base font-[Inter-Regular] text-gray-800">
               {format(selectedTime, 'h:mm a')}
             </Text>
           </TouchableOpacity>
@@ -152,12 +143,13 @@ export default function BookAppointmentScreen() {
           )}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Location</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name='map-sharp' size={20} color="#6B7280" style={styles.inputIcon} />
+        {/* Location Input */}
+        <View className="mb-6">
+          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Location</Text>
+          <View className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 h-14">
+            <Ionicons name="map-sharp" size={20} color="#6B7280" className="mr-3" />
             <TextInput
-              style={styles.input}
+              className="flex-1 text-base font-[Inter-Regular] text-gray-800"
               value={location}
               onChangeText={setLocation}
               placeholder="Enter clinic location"
@@ -166,12 +158,13 @@ export default function BookAppointmentScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Additional Notes</Text>
-          <View style={[styles.inputContainer, styles.textAreaContainer]}>
-            <Ionicons name='text' size={20} color="#6B7280" style={[styles.inputIcon, { marginTop: 12 }]} />
+        {/* Additional Notes */}
+        <View className="mb-6">
+          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Additional Notes</Text>
+          <View className="flex-row items-start bg-white border border-gray-200 rounded-xl px-4 py-3 h-32">
+            <Ionicons name="text" size={20} color="#6B7280" className="mr-3 mt-1" />
             <TextInput
-              style={[styles.input, styles.textArea]}
+              className="flex-1 text-base font-[Inter-Regular] text-gray-800"
               value={notes}
               onChangeText={setNotes}
               placeholder="Add any special instructions or notes"
@@ -183,21 +176,24 @@ export default function BookAppointmentScreen() {
           </View>
         </View>
 
-        <View style={styles.buttonContainer}>
+        {/* Buttons */}
+        <View className="flex-row gap-3 mt-6">
           <TouchableOpacity
-            style={[styles.button, styles.cancelButton]}
+            className="flex-1 h-14 rounded-xl bg-gray-100 justify-center items-center"
             onPress={() => router.back()}
             disabled={isSubmitting}
           >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
+            <Text className="text-base font-[Inter-SemiBold] text-gray-600">Cancel</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.submitButton, isSubmitting && styles.buttonDisabled]}
+            className={`flex-1 h-14 rounded-xl justify-center items-center ${
+              isSubmitting ? 'bg-blue-300' : 'bg-blue-500'
+            }`}
             onPress={handleSubmit}
             disabled={isSubmitting}
           >
-            <Text style={styles.submitButtonText}>
+            <Text className="text-base font-[Inter-SemiBold] text-white">
               {isSubmitting ? 'Booking...' : 'Book Appointment'}
             </Text>
           </TouchableOpacity>
@@ -206,137 +202,3 @@ export default function BookAppointmentScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    color: '#1F2937',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#6B7280',
-    marginBottom: 24,
-  },
-  errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FEE2E2',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  errorIcon: {
-    marginRight: 8,
-  },
-  errorText: {
-    flex: 1,
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#EF4444',
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#4B5563',
-    marginBottom: 12,
-  },
-  specialtyContainer: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  specialtyButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
-    marginRight: 8,
-  },
-  specialtyButtonActive: {
-    backgroundColor: '#EBF5FF',
-  },
-  specialtyButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  specialtyButtonTextActive: {
-    color: '#3B82F6',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    marginBottom: 12,
-    paddingHorizontal: 16,
-    height: 56,
-  },
-  textAreaContainer: {
-    height: 120,
-    alignItems: 'flex-start',
-  },
-  inputIcon: {
-    marginRight: 12,
-  },
-  input: {
-    flex: 1,
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  inputText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  textArea: {
-    height: '100%',
-    paddingTop: 16,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 24,
-  },
-  button: {
-    flex: 1,
-    height: 56,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#F3F4F6',
-  },
-  submitButton: {
-    backgroundColor: '#3B82F6',
-  },
-  buttonDisabled: {
-    backgroundColor: '#93C5FD',
-  },
-  cancelButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#4B5563',
-  },
-  submitButtonText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
-});

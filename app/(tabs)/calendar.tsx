@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Calendar as RNCalendar, LocaleConfig } from 'react-native-calendars';
+import { Calendar as RNCalendar } from 'react-native-calendars';
 import EventItem from 'components/EventItem';
 import { useMedications } from 'hooks/useMedications';
 import { useAppointments } from 'hooks/useAppointments';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
 export default function CalendarScreen() {
   const { medications } = useMedications();
   const { appointments } = useAppointments();
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const { theme } = useTheme();
+  const colorScheme = useColorScheme();
+  
+  // Determine colors based on theme
+  const backgroundColor = theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight';
+  const textColor = theme === 'dark' ? 'text-textDark' : 'text-textLight';
+  const secondaryTextColor = theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
+  const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
+  const headerBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+  const selectedDateBgColor = theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-50';
   
   // Prepare calendar marked dates
   const markedDates: Record<string, { dots: { key: string; color: string }[]; selected?: boolean; selectedColor?: string }> = {};
@@ -19,7 +30,6 @@ export default function CalendarScreen() {
   // Mark medication dates
   medications.forEach(med => {
     const medicationDates = [];
-    // This is simplified - in a real app, you'd generate dates based on frequency
     medicationDates.push(med.startDate);
     
     medicationDates.forEach(date => {
@@ -27,7 +37,6 @@ export default function CalendarScreen() {
         markedDates[date] = { dots: [] };
       }
       
-      // Add medication dot if not already added
       if (!markedDates[date].dots.some(dot => dot.key === 'medication')) {
         markedDates[date].dots.push({
           key: 'medication',
@@ -45,7 +54,6 @@ export default function CalendarScreen() {
       markedDates[date] = { dots: [] };
     }
     
-    // Add appointment dot if not already added
     if (!markedDates[date].dots.some(dot => dot.key === 'appointment')) {
       markedDates[date].dots.push({
         key: 'appointment',
@@ -68,22 +76,22 @@ export default function CalendarScreen() {
   const appointmentsForDay = appointments.filter(app => app.date === selectedDate);
   
   const renderLegend = () => (
-    <View style={styles.legendContainer}>
-      <View style={styles.legendItem}>
-        <View style={[styles.legendDot, { backgroundColor: '#10B981' }]} />
-        <Text style={styles.legendText}>Medications</Text>
+    <View className={`flex-row px-4 py-4 ${headerBgColor} border-b ${borderColor}`}>
+      <View className="flex-row items-center mr-4">
+        <View className="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5" />
+        <Text className={`font-inter-regular text-xs ${secondaryTextColor}`}>Medications</Text>
       </View>
-      <View style={styles.legendItem}>
-        <View style={[styles.legendDot, { backgroundColor: '#3B82F6' }]} />
-        <Text style={styles.legendText}>Appointments</Text>
+      <View className="flex-row items-center">
+        <View className="w-2.5 h-2.5 rounded-full bg-blue-500 mr-1.5" />
+        <Text className={`font-inter-regular text-xs ${secondaryTextColor}`}>Appointments</Text>
       </View>
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Calendar</Text>
+    <SafeAreaView className={`flex-1 ${backgroundColor}`} edges={['top']}>
+      <View className={`px-4 py-4 ${headerBgColor} border-b ${borderColor}`}>
+        <Text className={`font-inter-bold text-2xl ${textColor}`}>Calendar</Text>
       </View>
       
       <RNCalendar
@@ -91,17 +99,17 @@ export default function CalendarScreen() {
         markedDates={markedDates}
         onDayPress={(day) => setSelectedDate(day.dateString)}
         theme={{
-          calendarBackground: '#FFFFFF',
-          textSectionTitleColor: '#1F2937',
+          calendarBackground: theme === 'dark' ? '#0E1A2B' : '#FFFFFF',
+          textSectionTitleColor: theme === 'dark' ? '#F3F4F6' : '#1F2937',
           selectedDayBackgroundColor: '#3B82F6',
           selectedDayTextColor: '#FFFFFF',
           todayTextColor: '#3B82F6',
-          dayTextColor: '#1F2937',
-          textDisabledColor: '#9CA3AF',
+          dayTextColor: theme === 'dark' ? '#F3F4F6' : '#1F2937',
+          textDisabledColor: theme === 'dark' ? '#9CA3AF' : '#9CA3AF',
           dotColor: '#3B82F6',
           selectedDotColor: '#FFFFFF',
           arrowColor: '#3B82F6',
-          monthTextColor: '#1F2937',
+          monthTextColor: theme === 'dark' ? '#F3F4F6' : '#1F2937',
           indicatorColor: '#3B82F6',
           textDayFontFamily: 'Inter-Regular',
           textMonthFontFamily: 'Inter-SemiBold',
@@ -110,13 +118,13 @@ export default function CalendarScreen() {
           textMonthFontSize: 16,
           textDayHeaderFontSize: 13,
         }}
-        style={styles.calendar}
+        className={`border-b ${borderColor}`}
       />
       
       {renderLegend()}
       
-      <View style={styles.selectedDateContainer}>
-        <Text style={styles.selectedDateText}>
+      <View className={`px-4 py-4 ${selectedDateBgColor}`}>
+        <Text className={`font-inter-semibold text-base ${textColor}`}>
           {new Date(selectedDate).toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
@@ -126,12 +134,14 @@ export default function CalendarScreen() {
         </Text>
       </View>
       
-      <ScrollView style={styles.eventsContainer}>
+      <ScrollView className="flex-1 px-4 py-4">
         {medicationsForDay.length > 0 && (
-          <View style={styles.eventSection}>
-            <View style={styles.eventSectionHeader}>
+          <View className="mb-4">
+            <View className="flex-row items-center mb-2">
               <Ionicons name="medkit" size={18} color="#10B981" />
-              <Text style={styles.eventSectionTitle}>Medications</Text>
+              <Text className={`font-inter-semibold text-base ${textColor} ml-2`}>
+                Medications
+              </Text>
             </View>
             
             {medicationsForDay.map((medication) => (
@@ -146,10 +156,12 @@ export default function CalendarScreen() {
         )}
         
         {appointmentsForDay.length > 0 && (
-          <View style={styles.eventSection}>
-            <View style={styles.eventSectionHeader}>
+          <View className="mb-4">
+            <View className="flex-row items-center mb-2">
               <Ionicons name="time" size={18} color="#3B82F6" />
-              <Text style={styles.eventSectionTitle}>Appointments</Text>
+              <Text className={`font-inter-semibold text-base ${textColor} ml-2`}>
+                Appointments
+              </Text>
             </View>
             
             {appointmentsForDay.map((appointment) => (
@@ -164,97 +176,14 @@ export default function CalendarScreen() {
         )}
         
         {medicationsForDay.length === 0 && appointmentsForDay.length === 0 && (
-          <View style={styles.noEventsContainer}>
+          <View className="items-center justify-center py-10">
             <Ionicons name="calendar-outline" size={48} color="#9CA3AF" />
-            <Text style={styles.noEventsText}>No events scheduled for this day</Text>
+            <Text className={`font-inter-regular text-base ${secondaryTextColor} mt-3 text-center`}>
+              No events scheduled for this day
+            </Text>
           </View>
         )}
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  header: {
-    padding: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    color: '#1F2937',
-  },
-  calendar: {
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  legendContainer: {
-    flexDirection: 'row',
-    padding: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  legendDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 6,
-  },
-  legendText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: '#6B7280',
-  },
-  selectedDateContainer: {
-    padding: 16,
-    backgroundColor: '#EBF5FF',
-  },
-  selectedDateText: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  eventsContainer: {
-    flex: 1,
-    padding: 16,
-  },
-  eventSection: {
-    marginBottom: 16,
-  },
-  eventSectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  eventSectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginLeft: 8,
-  },
-  noEventsContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40,
-  },
-  noEventsText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 16,
-    color: '#6B7280',
-    marginTop: 12,
-    textAlign: 'center',
-  },
-});

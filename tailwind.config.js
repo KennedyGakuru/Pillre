@@ -16,6 +16,7 @@ module.exports = {
         primary: '#29B6F6',
         backgroundLight: '#FFFFFF',
         backgroundDark: '#0E1A2B',
+        borderLight: '#E5E7EB',
         textLight: '#1F2937',
         textDark: '#F3F4F6',
         gray: {

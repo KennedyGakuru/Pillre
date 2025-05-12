@@ -1,7 +1,8 @@
-import React = require('react');
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useTheme } from 'theme/colorScheme';
 
 interface Medication {
   id: string;
@@ -16,59 +17,34 @@ interface NextMedicationCardProps {
 }
 
 export default function NextMedicationCard({ medication }: NextMedicationCardProps) {
+  const { theme } = useTheme();
+
   return (
-    <TouchableOpacity 
-      style={styles.container}
+    <TouchableOpacity
       onPress={() => router.push(`/medications/${medication.id}`)}
+      className={`w-[31%] aspect-square rounded-2xl p-3 mb-3 shadow-sm
+        ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}
+      `}
     >
-      <View style={styles.iconContainer}>
+      <View className="w-10 h-10 rounded-full bg-[#EBF5FF] justify-center items-center mb-3">
         <Ionicons name="medkit" size={24} color="#3B82F6" />
       </View>
-      <Text style={styles.medicationName}>{medication.name}</Text>
-      <Text style={styles.medicationDosage}>{medication.dosage}</Text>
-      <Text style={styles.medicationTime}>{medication.time}</Text>
+
+      <Text
+        className={`text-sm font-[Inter-SemiBold] mb-1 ${
+          theme === 'dark' ? 'text-textDark' : 'text-textLight'
+        }`}
+      >
+        {medication.name}
+      </Text>
+
+      <Text className="text-xs text-gray-500 font-[Inter-Regular] mb-1">
+        {medication.dosage}
+      </Text>
+
+      <Text className="text-xs font-[Inter-Medium] text-primary">
+        {medication.time}
+      </Text>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '31%',
-    aspectRatio: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 12,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#EBF5FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  medicationName: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 14,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  medicationDosage: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: '#6B7280',
-    marginBottom: 4,
-  },
-  medicationTime: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 12,
-    color: '#3B82F6',
-  },
-});

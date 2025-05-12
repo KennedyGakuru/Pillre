@@ -5,11 +5,13 @@ import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
 const edit: React.FC = () => {
     const { user, updateUserProfile } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const {theme} = useTheme();
   
   const [formData, setFormData] = useState<{
     name: string;
@@ -64,7 +66,7 @@ const edit: React.FC = () => {
   };
 
     return(
-        <ScrollView style={styles.container}>
+      <ScrollView style={styles.container}>
       <SafeAreaView style={styles.content}>
         <View style={styles.imageSection}>
           <View style={styles.imageContainer}>

@@ -2,6 +2,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'theme/colorScheme';
 
 
 const faqs = [
@@ -49,248 +50,140 @@ const supportOptions = [
 ];
 
 
-const help: React.FC = () => {
-    return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
-          
-          {faqs.map((faq, index) => (
-            <View 
-              key={index} 
-              style={[
-                styles.faqItem,
-                index === faqs.length - 1 && styles.faqItemLast
-              ]}
-            >
-              <Text style={styles.question}>{faq.question}</Text>
-              <Text style={styles.answer}>{faq.answer}</Text>
-            </View>
-          ))}
-        </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Contact Support</Text>
-          
-          <View style={styles.supportContainer}>
-            {supportOptions.map((option, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.supportOption}
-                onPress={option.action}
+const help: React.FC = () => {
+  const {theme} = useTheme();
+    return (
+    <SafeAreaView 
+      edges={['top', 'left', 'right']}
+      className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}
+    >
+      <ScrollView className="flex-1">
+        <View className="p-6">
+          {/* FAQ Section */}
+          <View className="mb-8">
+            <Text className={`font-inter-semibold text-lg mb-4 ${theme === 'dark' ? 'text-textDark' : 'text-textLight'}`}>
+              Frequently Asked Questions
+            </Text>
+            
+            {faqs.map((faq, index) => (
+              <View 
+                key={index} 
+                className={`p-4 border rounded-lg mb-3 ${index === faqs.length - 1 ? 'mb-0' : ''} ${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}
               >
-                <View style={styles.supportIconContainer}>
-                  {option.icon}
+                <Text className={`font-inter-semibold text-base mb-2 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
+                  {faq.question}
+                </Text>
+                <Text className={`font-inter-regular text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {faq.answer}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Contact Support Section */}
+          <View className="mb-8">
+            <Text className={`font-inter-semibold text-lg mb-4 ${theme === 'dark' ? 'text-textDark' : 'text-textLight'}`}>
+              Contact Support
+            </Text>
+            
+            <View className={`rounded-xl border overflow-hidden ${
+              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
+              {supportOptions.map((option, index) => (
+                <TouchableOpacity
+                  key={index}
+                  className={`flex-row items-center p-4 ${
+                    index < supportOptions.length - 1 ? 'border-b border-gray-200' : ''
+                  } ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}
+                  onPress={option.action}
+                >
+                  <View className={`w-12 h-12 rounded-full mr-4 justify-center items-center ${
+                    theme === 'dark' ? 'bg-blue-900/30' : 'bg-blue-50'
+                  }`}>
+                    {option.icon}
+                  </View>
+                  <View className="flex-1">
+                    <Text className={`font-inter-semibold text-base ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
+                      {option.title}
+                    </Text>
+                    <Text className={`font-inter-regular text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                      {option.description}
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* User Guides Section */}
+          <View className="mb-8">
+            <Text className={`font-inter-semibold text-lg mb-4 ${theme === 'dark' ? 'text-textDark' : 'text-textLight'}`}>
+              User Guides
+            </Text>
+            
+            {['Getting Started Guide', 'Medication Management', 'Appointment Booking'].map((title, index) => (
+              <TouchableOpacity 
+                key={index}
+                className={`flex-row items-center p-4 border rounded-lg mb-3 ${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}
+              >
+                <View className="flex-1 mr-4">
+                  <Text className={`font-inter-semibold text-base mb-1 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
+                    {title}
+                  </Text>
+                  <Text className={`font-inter-regular text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                    {title === 'Getting Started Guide' 
+                      ? 'Learn the basics of using the app and setting up your profile'
+                      : title === 'Medication Management'
+                      ? 'How to add, edit, and track your medications'
+                      : 'Step-by-step guide to scheduling appointments'}
+                  </Text>
                 </View>
-                <View style={styles.supportInfo}>
-                  <Text style={styles.supportTitle}>{option.title}</Text>
-                  <Text style={styles.supportDescription}>{option.description}</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+                <Ionicons name="chevron-forward" size={20} color={theme === 'dark' ? '#9CA3AF' : '#6B7280'} />
               </TouchableOpacity>
             ))}
           </View>
-        </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>User Guides</Text>
-          
-          <TouchableOpacity style={styles.guideItem}>
-            <Text style={styles.guideTitle}>Getting Started Guide</Text>
-            <Text style={styles.guideDescription}>
-              Learn the basics of using the app and setting up your profile
+          {/* Troubleshooting Section */}
+          <View className="mb-8">
+            <Text className={`font-inter-semibold text-lg mb-4 ${theme === 'dark' ? 'text-textDark' : 'text-textLight'}`}>
+              Troubleshooting
             </Text>
-           <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.guideItem}>
-            <Text style={styles.guideTitle}>Medication Management</Text>
-            <Text style={styles.guideDescription}>
-              How to add, edit, and track your medications
-            </Text>
-            <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.guideItem}>
-            <Text style={styles.guideTitle}>Appointment Booking</Text>
-            <Text style={styles.guideDescription}>
-              Step-by-step guide to scheduling appointments
             
-            </Text>
-           <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-          </TouchableOpacity>
-        </View>
+            {['Common Issues and Solutions', 'Connection Problems'].map((title, index) => (
+              <TouchableOpacity
+                key={index}
+                className={`p-4 border rounded-lg mb-3 ${
+                  theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}
+              >
+                <Text className={`font-inter-semibold text-base mb-1 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-800'}`}>
+                  {title}
+                </Text>
+                <Text className={`font-inter-regular text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                  {title === 'Common Issues and Solutions'
+                    ? 'Find solutions to common problems and app-related issues'
+                    : 'Resolve issues with app connectivity and syncing'}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Troubleshooting</Text>
-          
-          <TouchableOpacity style={styles.troubleshootingItem}>
-            <Text style={styles.troubleshootingTitle}>
-              Common Issues and Solutions
+          {/* Footer */}
+          <View className={`p-6 rounded-xl ${theme === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
+            <Text className={`font-inter-regular text-sm text-center ${theme === 'dark' ? 'text-blue-300' : 'text-blue-500'}`}>
+              Need more help? Our support team is available 24/7 to assist you.
             </Text>
-            <Text style={styles.troubleshootingDescription}>
-              Find solutions to common problems and app-related issues
-            </Text>
-            <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.troubleshootingItem}>
-            <Text style={styles.troubleshootingTitle}>
-              Connection Problems
-            </Text>
-            <Text style={styles.troubleshootingDescription}>
-              Resolve issues with app connectivity and syncing
-            </Text>
-            <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-          </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Need more help? Our support team is available 24/7 to assist you.
-          </Text>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
-}
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  content: {
-    padding: 24,
-  },
-  section: {
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#1F2937',
-    marginBottom: 16,
-  },
-  faqItem: {
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    marginBottom: 12,
-    borderRadius: 8,
-  },
-  faqItemLast: {
-    marginBottom: 0,
-  },
-  question: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 8,
-  },
-  answer: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-    lineHeight: 20,
-  },
-  supportContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    overflow: 'hidden',
-  },
-  supportOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  supportIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#EBF5FF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  supportInfo: {
-    flex: 1,
-  },
-  supportTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  supportDescription: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  guideItem: {
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  guideTitle: {
-    flex: 1,
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  guideDescription: {
-    flex: 2,
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-    marginRight: 16,
-  },
-  troubleshootingItem: {
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  troubleshootingTitle: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  troubleshootingDescription: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 8,
-  },
-  footer: {
-    padding: 24,
-    backgroundColor: '#EBF5FF',
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 14,
-    color: '#3B82F6',
-    textAlign: 'center',
-  },
-});
-
+};
 
 export default help;
