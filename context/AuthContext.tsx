@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
+import { supabase } from 'lib/supabase';
 
 // --- Define types ---
 export type User = {
@@ -23,38 +24,45 @@ type AuthContextType = {
 // --- Create context ---
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// --- Mock API ---
-const mockSignIn = async (email: string, password: string): Promise<User> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  if (email === 'user@example.com' && password === 'password') {
-    return { id: '1', name: 'John Doe', email, phoneNumber: '555-123-4567' };
-  }
-  throw new Error('Invalid credentials');
-};
 
-const mockSignUp = async (name: string, email: string, password: string): Promise<User> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  return { id: '2', name, email };
-};
 
 // --- Provider ---
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  
+
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const userData = await getStoredUser();
-        if (userData) setUser(userData);
-      } catch (e) {
-        console.error('Load user error:', e);
-      } finally {
-        setIsLoading(false);
+    const { data: authListener} = supabase.auth.onAuthStateChange(
+      async (event, session) =>{
+        console.log('Auth event ;', event);
+
+        if  (event === 'SIGNED_OUT') {
+          await clearStoredUser();
+          setUser(null);
+        }
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          const {data:{ user: supabaseUser}, error} = await supabase.auth.getUser();
+
+          if (!error && supabaseUser){
+            const updatedUser: User = {
+              id: supabaseUser.id,
+              name: supabaseUser.user_metadata?.name || '',
+              email: supabaseUser.email || '',
+            };
+            setUser(updatedUser);
+            await storeUser(updatedUser);
+          }
+        }
       }
-    };
-    loadUser();
+    );
+    return () => {
+      authListener?.subscription.unsubscribe();
+    }; 
   }, []);
+
+  
 
   const storeUser = async (userData: User) => {
     const userString = JSON.stringify(userData);
@@ -65,15 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const getStoredUser = async (): Promise<User | null> => {
-    if (Platform.OS === 'web') {
-      const userString = localStorage.getItem('user');
-      return userString ? JSON.parse(userString) : null;
-    } else {
-      const userString = await SecureStore.getItemAsync('user');
-      return userString ? JSON.parse(userString) : null;
-    }
-  };
 
   const clearStoredUser = async () => {
     if (Platform.OS === 'web') {
@@ -86,9 +85,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const userData = await mockSignIn(email, password);
-      setUser(userData);
-      await storeUser(userData);
+      const { data, error} = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      
+      if (error) throw error;
+      const supabaseUser = data.user;
+
+      if (!supabaseUser){
+        throw new Error('User signIn failed')
+      }
+      const user: User ={
+        id:supabaseUser.id,
+        name:supabaseUser.user_metadata?.name || '',
+        email: supabaseUser.email || '',
+      };
+      setUser(user);
+      await storeUser(user);
+
     } catch (e) {
       throw e;
     } finally {
@@ -99,9 +114,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      const userData = await mockSignUp(name, email, password);
-      setUser(userData);
-      await storeUser(userData);
+      const { data, error} = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+          }
+        }
+      })
+
+      if (error) throw error;
+
+      const supabaseUser = data.user;
+
+      if (!supabaseUser) {
+        throw new Error('User signUp failed');
+      }
+
+      const user: User = {
+        id: supabaseUser.id,
+        name, // Use the name provided during sign-up
+        email: supabaseUser.email || '',
+      };
+
+      setUser(user);
+      await storeUser(user);
+
     } catch (e) {
       throw e;
     } finally {
@@ -112,6 +151,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     setIsLoading(true);
     try {
+      await supabase.auth.signOut();
       await clearStoredUser();
       setUser(null);
     } catch (e) {

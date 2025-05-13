@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Switch } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Switch, SafeAreaView } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'theme/colorScheme';
@@ -105,6 +105,7 @@ const Security: React.FC = () => {
   );
 
   return (
+    <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
     <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
       <View className="p-6">
         {error && (
@@ -216,6 +217,7 @@ const Security: React.FC = () => {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

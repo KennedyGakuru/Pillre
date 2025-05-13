@@ -7,6 +7,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from 'context/AuthContext';
 import { router } from 'expo-router';
+import { supabase } from 'lib/supabase';
+
 
 const RegisterScreen : React.FC = () => {
     const {theme} = useTheme();

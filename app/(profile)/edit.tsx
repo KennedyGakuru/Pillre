@@ -60,11 +60,12 @@ const EditProfile: React.FC = () => {
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
-      <SafeAreaView className="p-6">
+    
+      <SafeAreaView className="flex-1 bg-backgroundLight dark:bg-backgroundDark">
+            <ScrollView className="flex-1 bg-backgroundLight dark:bg-backgroundDark p-5">
         {/* Profile Image Section */}
         <View className="items-center mb-8">
-          <View className="w-30 h-30 rounded-full mb-4 relative">
+          <View className="w-[120px] h-[120px] rounded-full mb-4 relative">
             {formData.profileImage ? (
               <>
                 <Image
@@ -192,8 +193,9 @@ const EditProfile: React.FC = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        </ScrollView>
       </SafeAreaView>
-    </ScrollView>
+    
   );
 };
 

@@ -19,7 +19,6 @@ const LoginScreen: React.FC = () => {
     const { signIn } = useAuth();
 
     const handleLogin = async () => {
-        router.replace('/(tabs)');
         if(!email || !password) {
             Alert.alert('Error', 'Please fill in all fields');
            return;

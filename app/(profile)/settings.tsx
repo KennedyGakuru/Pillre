@@ -51,7 +51,7 @@ const Settings: React.FC = () => {
   );
 
   return (
-    <SafeAreaView className='flex-1'>
+    <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
     <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
       <View className="p-6">
         {/* Notification Settings */}

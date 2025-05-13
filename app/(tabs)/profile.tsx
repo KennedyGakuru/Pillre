@@ -95,15 +95,16 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top']}>
       <ScrollView>
-        <View className="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 mb-5">
-          <View className="flex-row items-center mb-4">
-            <View className="w-15 h-15 rounded-full bg-blue-100 dark:bg-blue-900/30 items-center justify-center mr-4">
+        
+        <View className="p-6 mb-5 ">
+          <View className=" items-center mb-4">
+            <View className="w-[90px] h-[90px]  rounded-[45px] bg-blue-100 dark:bg-blue-900/30 items-center justify-center mr-4">
               <Text className="font-inter-semibold text-2xl text-blue-500">
                 {user?.name?.charAt(0) || 'U'}
               </Text>
             </View>
             <View className="flex-1">
-              <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-1">
+              <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ">
                 {user?.name || 'User'}
               </Text>
               <Text className="font-inter-regular text-sm text-gray-500 dark:text-gray-400">
@@ -111,15 +112,16 @@ export default function ProfileScreen() {
               </Text>
             </View>
           </View>
-          
+          <View className='items-center'>
           <TouchableOpacity 
-            className="bg-blue-100 dark:bg-blue-900/30 rounded-lg py-2 px-4 self-start"
+            className="bg-blue-100 dark:bg-blue-900/30 rounded-lg py-2 px-4  "
             onPress={() => router.push('/(profile)/edit')}
           >
             <Text className="font-inter-medium text-sm text-blue-500 dark:text-blue-300">
               Edit Profile
             </Text>
           </TouchableOpacity>
+        </View>
         </View>
         
         {profileSections.map((section, sectionIndex) => (

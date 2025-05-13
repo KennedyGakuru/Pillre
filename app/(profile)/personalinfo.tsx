@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { useAuth, User as BaseUser } from 'context/AuthContext';
 import { router } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -61,6 +61,7 @@ const PersonalInfo: React.FC = () => {
   };
 
   return (
+    <SafeAreaView className={`flex-1 ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}>
     <ScrollView className="flex-1 bg-gray-50 dark:bg-gray-900">
       <View className="p-6">
         {error && (
@@ -237,6 +238,7 @@ const PersonalInfo: React.FC = () => {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 
