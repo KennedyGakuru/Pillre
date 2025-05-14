@@ -30,19 +30,19 @@ const faqs = [
 
 const supportOptions = [
   {
-    icon: <Ionicons name="call" size={24} color="#3B82F6" />,
+    icon: <Ionicons name="call" size={24} color="#29B6F6" />,
     title: 'Call Support',
     description: 'Speak with our support team',
     action: () => Linking.openURL('tel:1-800-123-4567'),
   },
   {
-    icon: <Ionicons name="mail-outline" size={24} color="#3B82F6" />,
+    icon: <Ionicons name="mail-outline" size={24} color="#29B6F6" />,
     title: 'Email Support',
     description: 'Send us an email',
     action: () => Linking.openURL('mailto:support@healthapp.com'),
   },
   {
-    icon: <Ionicons name="chatbubble" size={24} color="#3B82F6" />,
+    icon: <Ionicons name="chatbubble" size={24} color="##29B6F6" />,
     title: 'Live Chat',
     description: 'Chat with a support agent',
     action: () => {/* Open chat window */},

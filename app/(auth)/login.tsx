@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'theme/colorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {useState } from 'react';
+import { signInWithGoogle } from 'lib/auth/googleauth'; 
 
 
 
@@ -38,8 +39,8 @@ const LoginScreen: React.FC = () => {
 
     const toggleSceurity = (): void => setSecureTextEntry(!secureTextEntry);
     const googleLogoStyle : ImageStyle = {
-        height: 35,
-        width: 35
+        height: 30,
+        width: 30
     };
 
     return(
@@ -116,12 +117,12 @@ const LoginScreen: React.FC = () => {
                 <View className="flex-1 h-px bg-gray-300"/>
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity onPress={signInWithGoogle}
             className="w-full h-12 border border-gray-300 items-center justify-center rounded-lg  flex-row ">
-                <Image source={require('../../assets/Google logo.png')}
+                <Image source={require('../../assets/GoogleNewLogo.png')}
                  style={googleLogoStyle}
                  />
-                <Text style={{color: theme === 'dark' ? '#F3F4F6' : '#1F2937'}}>Continue with Google</Text>
+                <Text style={{padding: 5, color: theme === 'dark' ? '#F3F4F6' : '#1F2937'}}>Continue with Google</Text>
             </TouchableOpacity>
                        
             <View className='items-center justify-end flex-1 pb-6'>

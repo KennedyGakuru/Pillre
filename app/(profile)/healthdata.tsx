@@ -227,7 +227,7 @@ const healthdata: React.FC = () => {
 
             {isEditing && (
               <TouchableOpacity onPress={addCondition} className="flex-row items-center justify-center p-4 bg-blue-50 rounded-lg mb-4">
-                <Ionicons name="add" size={20} color="#3B82F6" />
+                <Ionicons name="add" size={20} color="#29B6F6" />
                 <Text className="text-base font-[Inter-Medium] text-blue-500 ml-2">Add Condition</Text>
               </TouchableOpacity>
             )}
@@ -290,7 +290,7 @@ const healthdata: React.FC = () => {
 
             {isEditing && (
               <TouchableOpacity onPress={addAllergy} className="flex-row items-center justify-center p-4 bg-blue-50 rounded-lg mb-4">
-                <Ionicons name="add" size={20} color="#3B82F6" />
+                <Ionicons name="add" size={20} color="##29B6F6" />
                 <Text className="text-base font-[Inter-Medium] text-blue-500 ml-2">Add Allergy</Text>
               </TouchableOpacity>
             )}

@@ -57,7 +57,7 @@ const Settings: React.FC = () => {
         {/* Notification Settings */}
         <View className="mb-8">
           <View className="flex-row items-center mb-4">
-            <Ionicons name="notifications" size={20} color="#3B82F6" />
+            <Ionicons name="notifications" size={20} color="#29B6F6" />
             <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
               Notifications
             </Text>
@@ -95,7 +95,7 @@ const Settings: React.FC = () => {
         {/* Display Settings */}
         <View className="mb-8">
           <View className="flex-row items-center mb-4">
-            <Ionicons name="moon" size={20} color="#3B82F6" />
+            <Ionicons name="moon" size={20} color="#29B6F6" />
             <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
               Display
             </Text>
@@ -126,7 +126,7 @@ const Settings: React.FC = () => {
         {/* Language Settings */}
         <View className="mb-8">
           <View className="flex-row items-center mb-4">
-            <Ionicons name="globe-outline" size={20} color="#3B82F6" />
+            <Ionicons name="globe-outline" size={20} color="#29B6F6" />
             <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
               Language
             </Text>
@@ -160,7 +160,7 @@ const Settings: React.FC = () => {
         {/* Data & Storage Settings */}
         <View className="mb-8">
           <View className="flex-row items-center mb-4">
-            <Ionicons name="wifi" size={20} color="#3B82F6" />
+            <Ionicons name="wifi" size={20} color="#29B6F6" />
             <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 ml-2">
               Data & Storage
             </Text>

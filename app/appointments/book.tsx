@@ -12,6 +12,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { router } from 'expo-router';
 import { useTheme } from 'theme/colorScheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const specialties = [
   'Cardiology', 'Dermatology', 'Endocrinology', 'Family Medicine',
@@ -60,12 +61,13 @@ export default function BookAppointmentScreen() {
   };
 
   return (
+    <SafeAreaView className={`${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'} flex-1`}>
     <ScrollView className={`${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'} flex-1`}>
       <View className="p-6">
-        <Text className="text-2xl font-[Inter-Bold] text-textDark dark:text-textLight mb-2">
+        <Text className="font-inter-bold text-2xl text-gray-800 dark:text-textDark mb-2">
           Book New Appointment
         </Text>
-        <Text className="text-base text-gray-500 mb-6 font-[Inter-Regular]">
+        <Text className="font-inter-regular text-base text-gray-500 dark:text-gray-400 mb-6">
           Schedule a visit with our healthcare providers
         </Text>
 
@@ -78,18 +80,18 @@ export default function BookAppointmentScreen() {
 
         {/* Specialty Selection */}
         <View className="mb-6">
-          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Specialty</Text>
+          <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300 mb-3">Specialty</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
             {specialties.map((specialty) => {
               const active = selectedSpecialty === specialty;
               return (
                 <TouchableOpacity
                   key={specialty}
-                  className={`rounded-full px-4 py-2 mr-2 ${active ? 'bg-blue-100' : 'bg-gray-100'}`}
+                  className={`rounded-full px-4 py-2 mr-2 ${active ? 'bg-blue-100 dark:bg-blue-900'  : 'bg-gray-100 dark:bg-gray-700'}`}
                   onPress={() => setSelectedSpecialty(specialty)}
                 >
                   <Text
-                    className={`text-sm font-[Inter-Medium] ${active ? 'text-blue-500' : 'text-gray-600'}`}
+                    className={`text-sm font-[Inter-Medium] ${active ? 'text-blue-500 dark:text-blue-300'  : 'text-gray-500 dark:text-gray-400'}`}
                   >
                     {specialty}
                   </Text>
@@ -101,24 +103,24 @@ export default function BookAppointmentScreen() {
 
         {/* Date & Time */}
         <View className="mb-6">
-          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Date & Time</Text>
+          <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300 mb-3">Date & Time</Text>
 
           <TouchableOpacity
-            className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 h-14 mb-3"
+            className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 h-14 mb-3"
             onPress={() => setShowDatePicker(true)}
           >
             <Ionicons name="calendar" size={20} color="#6B7280" className="mr-3" />
-            <Text className="text-base font-[Inter-Regular] text-gray-800">
+            <Text className="text-base font-inter-regular text-gray-800 dark:text-textDark">
               {format(selectedDate, 'EEEE, MMMM d, yyyy')}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 h-14"
+            className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 h-14"
             onPress={() => setShowTimePicker(true)}
           >
             <Ionicons name="time" size={20} color="#6B7280" className="mr-3" />
-            <Text className="text-base font-[Inter-Regular] text-gray-800">
+            <Text className="text-base font-inter-regular text-gray-800 dark:text-textDark">
               {format(selectedTime, 'h:mm a')}
             </Text>
           </TouchableOpacity>
@@ -145,11 +147,11 @@ export default function BookAppointmentScreen() {
 
         {/* Location Input */}
         <View className="mb-6">
-          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Location</Text>
-          <View className="flex-row items-center bg-white border border-gray-200 rounded-xl px-4 h-14">
+          <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300 mb-3">Location</Text>
+          <View className="flex-row items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 h-14">
             <Ionicons name="map-sharp" size={20} color="#6B7280" className="mr-3" />
             <TextInput
-              className="flex-1 text-base font-[Inter-Regular] text-gray-800"
+              className="flex-1 text-base font-[Inter-Regular] text-gray-800 dark:text-textDark"
               value={location}
               onChangeText={setLocation}
               placeholder="Enter clinic location"
@@ -160,11 +162,11 @@ export default function BookAppointmentScreen() {
 
         {/* Additional Notes */}
         <View className="mb-6">
-          <Text className="text-base font-[Inter-SemiBold] text-gray-700 mb-3">Additional Notes</Text>
-          <View className="flex-row items-start bg-white border border-gray-200 rounded-xl px-4 py-3 h-32">
+          <Text className="font-inter-semibold text-base text-gray-700 dark:text-gray-300 mb-3">Additional Notes</Text>
+          <View className="flex-row items-start bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 h-32">
             <Ionicons name="text" size={20} color="#6B7280" className="mr-3 mt-1" />
             <TextInput
-              className="flex-1 text-base font-[Inter-Regular] text-gray-800"
+              className="flex-1 text-base font-[Inter-Regular] text-gray-800 dark:text-textDark"
               value={notes}
               onChangeText={setNotes}
               placeholder="Add any special instructions or notes"
@@ -187,7 +189,7 @@ export default function BookAppointmentScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`flex-1 h-14 rounded-xl justify-center items-center ${
+            className={`flex-1 h-14 rounded-xl justify-center items-center bg-primary ${
               isSubmitting ? 'bg-blue-300' : 'bg-blue-500'
             }`}
             onPress={handleSubmit}
@@ -200,5 +202,6 @@ export default function BookAppointmentScreen() {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }

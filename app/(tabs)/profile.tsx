@@ -37,17 +37,17 @@ export default function ProfileScreen() {
       title: 'Account',
       items: [
         { 
-          icon: <Ionicons name="person-circle" size={20} color="#3B82F6" />,
+          icon: <Ionicons name="person-circle" size={20} color="#29B6F6" />,
           label: 'Personal Information',
           onPress: () => router.push('/(profile)/personalinfo'),
         },
         { 
-          icon: <Ionicons name="call" size={20} color="#3B82F6" />,
+          icon: <Ionicons name="call" size={20} color="#29B6F6" />,
           label: 'Emergency Contacts',
           onPress: () => router.push('/(profile)/emergencycontact'),
         },
         { 
-          icon: <Ionicons name="lock-closed" size={20} color="#3B82F6" />,
+          icon: <Ionicons name="lock-closed" size={20} color="#29B6F6" />,
           label: 'Security',
           onPress: () => router.push('/(profile)/security'),
         },
@@ -57,19 +57,19 @@ export default function ProfileScreen() {
       title: 'Preferences',
       items: [
         { 
-          icon: <Ionicons name="notifications" size={20} color="#3B82F6" />,
+          icon: <Ionicons name="notifications" size={20} color="#29B6F6" />,
           label: 'Notifications',
           rightElement: (
             <Switch
               value={notificationsEnabled}
               onValueChange={setNotificationsEnabled}
               trackColor={{ false: '#D1D5DB', true: '#BFDBFE' }}
-              thumbColor={notificationsEnabled ? '#3B82F6' : '#9CA3AF'}
+              thumbColor={notificationsEnabled ? '#29B6F6' : '#9CA3AF'}
             />
           ),
         },
         { 
-          icon: <Ionicons name="heart" size={20} color="#3B82F6" />,
+          icon: <Ionicons name="heart" size={20} color="#29B6F6" />,
           label: 'Health Data',
           onPress: () => router.push('/(profile)/healthdata'),
         },
@@ -79,12 +79,12 @@ export default function ProfileScreen() {
       title: 'Support',
       items: [
         { 
-          icon: <Ionicons name="help-circle" size={20} color="#3B82F6" />,
+          icon: <Ionicons name="help-circle" size={20} color="#29B6F6" />,
           label: 'Help & FAQ',
           onPress: () => router.push('/(profile)/help'),
         },
         { 
-          icon: <Ionicons name="settings" size={20} color="#3B82F6" />,
+          icon: <Ionicons name="settings" size={20} color="#29B6F6" />,
           label: 'App Settings',
           onPress: () => router.push('/(profile)/settings'),
         },

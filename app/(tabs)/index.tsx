@@ -93,7 +93,7 @@ export default function HomeScreen() {
           
           <TouchableOpacity 
              className='bg-primary rounded-lg py-3 items-center justify-center mt-4"'
-            onPress={() => router.push('/')}
+            onPress={() => router.push('/appointments/book')}
           >
             <Text className='font-bold text-base text-white'>Book New Appointment</Text>
           </TouchableOpacity>

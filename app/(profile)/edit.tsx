@@ -92,7 +92,7 @@ const EditProfile: React.FC = () => {
             className="flex-row items-center bg-blue-100 dark:bg-blue-900/30 py-2 px-4 rounded-lg"
             onPress={pickImage}
           >
-            <Ionicons name="camera" size={20} color="#3B82F6" className="mr-2" />
+            <Ionicons name="camera" size={20} color="#29B6F6" className="mr-2" />
             <Text className="font-inter-medium text-sm text-blue-500 dark:text-blue-300">
               Change Photo
             </Text>
@@ -182,7 +182,7 @@ const EditProfile: React.FC = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`flex-1 h-12 bg-blue-500 rounded-lg justify-center items-center ${
+            className={`flex-1 h-12 bg-primary rounded-lg justify-center items-center ${
               isSubmitting ? 'opacity-70' : ''
             }`}
             onPress={handleSubmit}

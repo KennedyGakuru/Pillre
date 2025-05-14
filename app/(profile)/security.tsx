@@ -162,7 +162,7 @@ const Security: React.FC = () => {
           </View>
 
           <TouchableOpacity
-            className={`bg-blue-500 rounded-lg py-3 items-center ${
+            className={`bg-primary rounded-lg py-3 items-center ${
               isSubmitting ? 'opacity-70' : ''
             }`}
             onPress={handleChangePassword}

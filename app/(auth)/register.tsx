@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from 'context/AuthContext';
 import { router } from 'expo-router';
-import { supabase } from 'lib/supabase';
+import { signInWithGoogle } from 'lib/auth/googleauth';
 
 
 const RegisterScreen : React.FC = () => {
@@ -56,7 +56,7 @@ const RegisterScreen : React.FC = () => {
   setIsSubmitting(true);
   try {
     await signUp(userName, email, password);
-    router.replace('/(tabs)');
+    router.replace('/login');
   } catch (error) {
     Alert.alert(
       'Registration Failed',
@@ -70,8 +70,8 @@ const RegisterScreen : React.FC = () => {
 
 
     const googleLogoStyle : ImageStyle = {
-        height: 35,
-        width: 35
+        height: 30,
+        width: 30
     };
     const handleLogin = (): void => router.replace('/login');
 
@@ -181,12 +181,12 @@ const RegisterScreen : React.FC = () => {
                 <View className="flex-1 h-px bg-gray-300"/>
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity onPress={signInWithGoogle}
             className="w-full h-12 border border-gray-300 items-center justify-center rounded-lg  flex-row ">
-                <Image source={require('../../assets/Google logo.png')}
+                <Image source={require('../../assets/GoogleNewLogo.png')}
                  style={googleLogoStyle}
                  />
-                <Text style={{color: theme === 'dark' ? '#F3F4F6' : '#1F2937'}}>Continue with Google</Text>
+                <Text style={{padding: 5, color: theme === 'dark' ? '#F3F4F6' : '#1F2937'}}>Continue with Google</Text>
             </TouchableOpacity>
 
 
