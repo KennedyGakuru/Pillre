@@ -24,45 +24,42 @@ type AuthContextType = {
 // --- Create context ---
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
-
 // --- Provider ---
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  
-
   useEffect(() => {
-    const { data: authListener} = supabase.auth.onAuthStateChange(
-      async (event, session) =>{
-        console.log('Auth event ;', event);
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      //console.log('Auth event:', event);
 
-        if  (event === 'SIGNED_OUT') {
-          await clearStoredUser();
-          setUser(null);
-        }
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          const {data:{ user: supabaseUser}, error} = await supabase.auth.getUser();
+      if (event === 'SIGNED_OUT') {
+        await clearStoredUser();
+        setUser(null);
+      }
 
-          if (!error && supabaseUser){
-            const updatedUser: User = {
-              id: supabaseUser.id,
-              name: supabaseUser.user_metadata?.name || '',
-              email: supabaseUser.email || '',
-            };
-            setUser(updatedUser);
-            await storeUser(updatedUser);
-          }
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        const { session: newSession, error } = await supabase.auth.setSession({
+          refresh_token: session?.refresh_token || '',
+          access_token: session?.access_token || '',
+        }) as { session: { user: any; refresh_token: string; access_token: string } | null; error: any };
+        const supabaseUser = session?.user;
+        if (!error && supabaseUser) {
+          const updatedUser: User = {
+            id: supabaseUser.id,
+            name: supabaseUser.user_metadata?.name || '',
+            email: supabaseUser.email || '',
+          };
+          setUser(updatedUser);
+          await storeUser(updatedUser);
         }
       }
-    );
-    return () => {
-      authListener?.subscription.unsubscribe();
-    }; 
-  }, []);
+    });
 
-  
+    return () => {
+      authListener?.unsubscribe(); // Unsubscribe directly from the authListener
+    };
+  }, []);
 
   const storeUser = async (userData: User) => {
     const userString = JSON.stringify(userData);
@@ -72,7 +69,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await SecureStore.setItemAsync('user', userString);
     }
   };
-
 
   const clearStoredUser = async () => {
     if (Platform.OS === 'web') {
@@ -85,25 +81,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const { data, error} = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      
-      if (error) throw error;
-      const supabaseUser = data.user;
+      const { user: supabaseUser, error } = await supabase.auth.signIn({ email, password });
 
-      if (!supabaseUser){
-        throw new Error('User signIn failed')
-      }
-      const user: User ={
-        id:supabaseUser.id,
-        name:supabaseUser.user_metadata?.name || '',
+      if (error || !supabaseUser) throw error || new Error('User signIn failed');
+
+      const user: User = {
+        id: supabaseUser.id,
+        name: supabaseUser.user_metadata?.name || '',
         email: supabaseUser.email || '',
       };
+
       setUser(user);
       await storeUser(user);
-
     } catch (e) {
       throw e;
     } finally {
@@ -114,33 +103,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      const { data, error} = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name,
-          }
-        }
-      })
+      const { user: supabaseUser, error } = await supabase.auth.signUp(
+        { email, password },
+        { data: { name } } // user_metadata
+      );
 
-      if (error) throw error;
-
-      const supabaseUser = data.user;
-
-      if (!supabaseUser) {
-        throw new Error('User signUp failed');
-      }
+      if (error || !supabaseUser) throw error || new Error('User signUp failed');
 
       const user: User = {
         id: supabaseUser.id,
-        name, // Use the name provided during sign-up
+        name,
         email: supabaseUser.email || '',
       };
 
       setUser(user);
       await storeUser(user);
-
     } catch (e) {
       throw e;
     } finally {
