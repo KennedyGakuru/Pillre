@@ -4,29 +4,26 @@
     "slug": "pillre",
     "scheme": "pillre",
     "version": "1.0.0",
-
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "experiments": {
       "tsconfigPaths": true
     },
-
-    "plugins": [],
-
+    "plugins": [
+      "expo-web-browser"
+    ],
     "orientation": "portrait",
     "icon": "./assets/PillreIcon.png",
-
     "userInterfaceStyle": "automatic",
-
     "splash": {
       "image": "./assets/Pillre.logo.png",
       "backgroundColor": "#ffffff",
       "resizeMode": "contain"
     },
-    
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
