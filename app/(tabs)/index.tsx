@@ -9,35 +9,22 @@ import UpcomingAppointmentCard from 'components/UpcomingAppointmentCard';
 import HealthStatsCard from 'components/HealthStatsCard';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'theme/colorScheme';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from 'store';
+
+
 
 export default function HomeScreen() {
   const { user } = useAuth();
   const {theme} = useTheme();
   
-  const upcomingMedications = [
-    { id: '1', name: 'Lisinopril', dosage: '10mg', time: '09:00 AM', type: 'Tablet' },
-    { id: '2', name: 'Metformin', dosage: '500mg', time: '01:00 PM', type: 'Tablet' },
-    { id: '3', name: 'Vitamin D', dosage: '1000 IU', time: '09:00 PM', type: 'Capsule' },
-  ];
+  const upcomingMedications = useSelector(
+    (state: RootState) => state.medications.medications
+  );
   
-  const upcomingAppointments = [
-    {
-      id: '1',
-      doctorName: 'Dr. Sarah Johnson',
-      specialty: 'Cardiologist',
-      date: '2025-05-25',
-      time: '10:30 AM',
-      location: 'Heart Care Center',
-    },
-    {
-      id: '2',
-      doctorName: 'Dr. Michael Chen',
-      specialty: 'Endocrinologist',
-      date: '2025-06-02',
-      time: '2:15 PM',
-      location: 'Diabetes Management Clinic',
-    },
-  ];
+  const upcomingAppointments = useSelector(
+    (state: RootState) => state.appointments.appointments
+  );
 
   return (
     <SafeAreaView 

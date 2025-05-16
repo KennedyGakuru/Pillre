@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -6,6 +7,8 @@ import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } f
 import { useFonts } from 'expo-font';
 import { SplashScreen } from 'expo-router';
 import { AuthProvider} from 'context/AuthContext';
+import { Provider } from 'react-redux';
+import { store } from '../store';
 //import * as Notifications from 'expo-notifications';
 import React from 'react';
 import '../global.css'; 
@@ -56,6 +59,7 @@ export default function RootLayout() {
   }
 
   return (
+    <Provider store={store}>
     <AuthProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -64,6 +68,7 @@ export default function RootLayout() {
       </Stack>
       <StatusBar style="auto" />
     </AuthProvider>
+    </Provider>
   );
 }
 

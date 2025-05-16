@@ -6,9 +6,11 @@ import AppointmentListItem from 'components/AppointmentListItem';
 import { useAppointments } from 'hooks/useAppointments';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'theme/colorScheme';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
 
 export default function AppointmentsScreen() {
-  const { appointments } = useAppointments();
+  const appointments = useSelector((state: RootState) => state.appointments.appointments);
   const [searchQuery, setSearchQuery] = useState('');
   const { theme } = useTheme();
   
