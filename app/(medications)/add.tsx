@@ -6,6 +6,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'theme/colorScheme';
+import { addMedication } from 'store/slices/medicationsSlice';
+import { useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 const medicationTypes = [
   'Tablet',
@@ -40,6 +43,7 @@ export default function AddMedicationScreen() {
   const [instructions, setInstructions] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
 
   const handleDateChange = (event: any, date?: Date) => {
     setShowDatePicker(false);
@@ -76,8 +80,15 @@ export default function AddMedicationScreen() {
         throw new Error('Please select frequency');
       }
 
-      // Add medication logic here
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const newMedication = {
+      id: uuidv4(),
+      name,
+      dosage,
+      time: format(time, 'h:mm a'),
+      type,
+    };
+
+    dispatch(addMedication(newMedication));
 
       router.back();
     } catch (err) {
