@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Platform,
-} from 'react-native';
+import { ScrollView,Text, TextInput,TouchableOpacity, View, Platform,} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { router } from 'expo-router';
 import { useTheme } from 'theme/colorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import { addAppointment } from 'store/slices/appointmentsSlice';
 
 const specialties = [
   'Cardiology', 'Dermatology', 'Endocrinology', 'Family Medicine',
@@ -32,6 +28,7 @@ export default function BookAppointmentScreen() {
   const [notes, setNotes] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
 
   const handleDateChange = (_: any, date?: Date) => {
     setShowDatePicker(false);
@@ -51,7 +48,19 @@ export default function BookAppointmentScreen() {
       if (!selectedSpecialty) throw new Error('Please select a specialty');
       if (!location) throw new Error('Please enter a location');
 
-      await new Promise(res => setTimeout(res, 1000));
+      const newAppointment = {
+        id: uuidv4(),
+        specialty: selectedSpecialty,
+        date: format(selectedDate, 'yyyy-MM-dd'),
+        time: format(selectedTime, 'HH:mm'),
+        location,
+        notes,
+        doctorName: 'Dr. Who', 
+        status: 'upcoming' as 'upcoming',
+      }
+      dispatch(addAppointment(newAppointment));
+
+
       router.back();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to book appointment');
