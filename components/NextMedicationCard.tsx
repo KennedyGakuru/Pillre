@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTheme } from 'theme/colorScheme';
+import Pillicon from './Pillicon';
 
 interface Medication {
   id: string;
@@ -27,7 +28,7 @@ export default function NextMedicationCard({ medication }: NextMedicationCardPro
       `}
     >
       <View className="w-10 h-10 rounded-full bg-[#EBF5FF] justify-center items-center mb-3">
-        <Ionicons name="medkit" size={24} color="#3B82F6" />
+        <Pillicon width={30} height={24} />
       </View>
 
       <Text
