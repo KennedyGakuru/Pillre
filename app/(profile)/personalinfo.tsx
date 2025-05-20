@@ -72,67 +72,7 @@ const PersonalInfo: React.FC = () => {
           </View>
         )}
 
-        {/* Address Information Section */}
-        <View className="mb-8">
-          <Text className="font-inter-semibold text-lg text-gray-800 dark:text-gray-100 mb-4">
-            Address Information
-          </Text>
-          
-          <View className="mb-4">
-            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
-              Street Address
-            </Text>
-            <TextInput
-              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
-              value={formData.address}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, address: text }))}
-              placeholder="Enter your street address"
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-
-          <View className="mb-4">
-            <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
-              City
-            </Text>
-            <TextInput
-              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
-              value={formData.city}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, city: text }))}
-              placeholder="Enter your city"
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-
-          <View className="flex-row mb-4">
-            <View className="flex-1 mr-2">
-              <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
-                State
-              </Text>
-              <TextInput
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
-                value={formData.state}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, state: text }))}
-                placeholder="State"
-                placeholderTextColor="#9CA3AF"
-              />
-            </View>
-
-            <View className="flex-1 ml-2">
-              <Text className="font-inter-medium text-sm text-gray-700 dark:text-gray-300 mb-2">
-                ZIP Code
-              </Text>
-              <TextInput
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 font-inter-regular text-base text-gray-800 dark:text-gray-100"
-                value={formData.zipCode}
-                onChangeText={(text) => setFormData(prev => ({ ...prev, zipCode: text }))}
-                placeholder="ZIP"
-                placeholderTextColor="#9CA3AF"
-                keyboardType="numeric"
-              />
-            </View>
-          </View>
-        </View>
+        
 
         {/* Personal Details Section */}
         <View className="mb-8">
