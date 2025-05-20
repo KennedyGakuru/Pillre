@@ -1,30 +1,34 @@
-import React from 'react';
+import {useState} from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from 'context/AuthContext';
 import { router } from 'expo-router';
 import DashboardHeader from 'components/DashboardHeader';
-import NextMedicationCard from 'components/NextMedicationCard';
-import UpcomingAppointmentCard from 'components/UpcomingAppointmentCard';
-import HealthStatsCard from 'components/HealthStatsCard';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'theme/colorScheme';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'store';
+import WeekCalendar from 'components/WeekCalendar';
+import { format } from 'date-fns';
+import MedicineProgressCircle from 'components/MedicineProgressCircle';
+import MedicationListItem from 'components/MedicationListItem';
 
 
 
 export default function HomeScreen() {
   const { user } = useAuth();
   const {theme} = useTheme();
+  const [selectedDate, setSelectedDate] = useState(new Date());
   
   const upcomingMedications = useSelector(
     (state: RootState) => state.medications.medications
   );
   
-  const upcomingAppointments = useSelector(
-    (state: RootState) => state.appointments.appointments
-  );
+ const highlightedDates = [
+    '2025-05-20',
+    '2025-05-22',
+    '2025-05-24',
+  ];
 
   return (
     <SafeAreaView 
@@ -37,86 +41,40 @@ export default function HomeScreen() {
         <View className='mb-6'>
           <View className='flex-row justify-between items-center m-4'>
             <Text className={`font-inter-semibold text-lg ${theme === 'dark' ? 'text-textDark' : 'text-textLight'}`}>Today's Medications</Text>
-            <TouchableOpacity 
-              className='p-1'
-              onPress={() => router.push('/medications')}
-            >
-              <Text className="font-medium text-sm text-primary">See All</Text>
-            </TouchableOpacity>
           </View>
           
-          <View  className="flex-row flex-wrap justify-between">
-            {upcomingMedications.map((medication) => (
-              <NextMedicationCard key={medication.id} medication={medication} />
-            ))}
-            
-            <TouchableOpacity 
-              style={styles.addButtonContainer}
-              className={`w-[31%] aspect-square justify-center items-center rounded-2xl border-2 border-dashed border-gray-300  ${theme === 'dark' ? 'bg-backgroundDark' : 'bg-backgroundLight'}`}
-              onPress={() => router.push('/(medications)/add')}
-            >
-              <View  className='w-12 h-12 rounded-full bg-blue-100 justify-center items-center mb-2'>
-                <Ionicons name="add" size={24} color="#3B82F6" />
-              </View>
-              <Text className='font-medium text-xs text-primary text-center'>Add Medicine</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        
-        <View className='mb-6'>
-          <View  className='flex-row justify-between items-center mb-4'>
-            <Text className={`font-inter-bold text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Upcoming Appointments</Text>
-            <TouchableOpacity 
-             className='p-1'
-              onPress={() => router.push('/appointments')}
-            >
-              <Text className="font-medium text-sm text-primary">See All</Text>
-            </TouchableOpacity>
-          </View>
-          
-          {upcomingAppointments.map((appointment) => (
-            <UpcomingAppointmentCard key={appointment.id} appointment={appointment} />
-          ))}
-          
-          <TouchableOpacity 
-             className='bg-primary rounded-lg py-3 items-center justify-center mt-4"'
-            onPress={() => router.push('/appointments/book')}
-          >
-            <Text className='font-bold text-base text-white'>Book New Appointment</Text>
-          </TouchableOpacity>
-        </View>
-        
-        <View className='mb-6'>
-          <View className='flex-row items-center justify-between mb-4'>
-            <Text className={`font-inter-semibold text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Health Statistics</Text>
-          </View>
-          
-          <HealthStatsCard 
-            stats={[
-              { label: 'Adherence', value: '85%', icon: <Ionicons name="medkit" size={20} color="#3B82F6" /> },
-              { label: 'Appointments', value: '2', icon: <Ionicons name="time" size={20} color="#3B82F6" /> },
-              { label: 'Reminders', value: '8', icon: <Ionicons name="notifications" size={20} color="#3B82F6" /> },
-            ]}
+          <WeekCalendar
+           onDateSelect={setSelectedDate}
+           highlightedDates={highlightedDates}
+           
+           />
+
+           <MedicineProgressCircle progress={2/4} medStatus={'2/5'} day={'wednesday'} /> 
+
+          {upcomingMedications.map((med) => (
+
+          <MedicationListItem
+          key={med.id}
+         medication={med}
+         onPress={() => router.push('/(medications)/edit')}
           />
+         ))} 
+          
         </View>
+        
+        
+        
+        
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  
-  addButtonContainer: {
-    width: '31%',
-    aspectRatio: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderStyle: 'dashed',
-    backgroundColor: '#F9FAFB',
-    padding: 12,
-  },
-  
-});
+function useDate(arg0: any): [any, any] {
+  throw new Error('Function not implemented.');
+}
+
+function newDate(): any {
+  throw new Error('Function not implemented.');
+}
+
