@@ -32,10 +32,16 @@ export default function TabLayout() {
           marginBottom: Platform.OS === 'android' ? 8 : 0,
         },
         tabBarStyle: {
+        backgroundColor: '#455A64', 
+        borderRadius: 40, 
+        height: 60, 
+        width: '90%', 
+        bottom: 20, 
+        marginHorizontal: '5%', 
         position: 'absolute', 
-        borderTopWidth: 0,
-        backgroundColor:" bg-backgroundLight dark:bg-backgroundDark",
+        borderTopWidth: 0,    
 },
+
         headerShown: false,
       }}
     >
@@ -53,25 +59,7 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarIcon: ({ color, size }: { color: string; size: number }) => (
-            <Ionicons name="medkit" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="appointments"
-        options={{
-          title: '',
-          tabBarIcon: ({ color, size }: { color: string; size: number })  => (
-            <Ionicons name='time' size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          title: '',
-          tabBarIcon: ({ color, size } : { color: string; size: number }) => (
-            <Ionicons name="calendar" size={size} color={color}/>
+            <Ionicons name="add" size={size} color={color} />
           ),
         }}
       />
