@@ -1,13 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import Animated, {
-  useSharedValue,
-  useAnimatedProps,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
-
+import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing} from 'react-native-reanimated';
+import Pillicon from './Pillicon';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 type Props = {
@@ -81,7 +76,7 @@ export default function MedicineProgressCircle({
 
         {/* Pill + Med Status */}
         <View className="absolute items-center">
-          <Text className="text-xl">💊</Text>
+          <Pillicon width={30} height={24} />
           <Text className="text-xs text-green-800">{medStatus}</Text>
         </View>
       </View>
